@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>🛡️ Proxy Seguro Open Source para Automatizaciones</strong>
+  <strong>Proxy Seguro Open Source para Automatizaciones</strong>
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@
 
 ## 🚀 Descripción
 
-Laracloak es una plataforma **open source** construida con **Laravel** que actúa como un "front-office" seguro y un "proxy opaco" para instancias externas (n8n, Make, APIs, etc.). Su objetivo es permitir la interacción con flujos de automatización **sin exponer la infraestructura upstream** al usuario final.
+Laracloak es una plataforma **open source** construida con **Laravel** que actúa como un "front-office" seguro y un "proxy opaco" para instancias externas (n8n, Make, APIs, etc.). Su objetivo es permitir la interacción con flujos de automatización **sin exponer la infraestructura upstream** al usuario final. Ha sido desarrollado con Google Antigravity y diferentes modelos (Gemini, Claude...) por lo que es posible que existan incongruencias en el código y algunos fallos críticos de seguridad. **Este es un proyecto en desarrollo y no recomendado para entornos de producción**
 
 ### Características Clave
 - **Opacidad de Endpoints**: Ningún detalle del endpoint (URLs, headers, errores internos) es visible en el navegador o logs de red.
@@ -93,12 +93,19 @@ El sistema utiliza relaciones **polimórficas** para permitir una flexibilidad t
 
 ## ⚠️ Notas de Desarrollo (Windows)
 
-Debido a comportamientos específicos de la shell en Windows, todos los comandos de ejecución de agentes deben seguir este formato para evitar bloqueos:
+Debido a comportamientos específicos de la shell en Windows, todos los comandos de ejecución de agentes tuvieron que seguir este formato para evitar errores:
 
 ```cmd
 cmd /c <your_command> & ::
 ```
-*(Ver [agent_command_fix.md](file:///C:/laragon/www/javi/agent_command_fix.md) para más detalles).*
+
+---
+
+## 📝 To-Do
+
+- **Mejorar editor de paneles/formularios**: La zona de edición de texto es incómoda y hay que redimensionarla manualmente. Un editor con marcado o directamente algo drag&drop con diferentes widgets sería valorable.
+- **JWT**: Actualmente no está bien implementado, hay que darle una vuelta al asunto.
+- **Grid**: Simplificar la distribución de elementos en formularios/paneles mediante filas y columnas de forma más elegante que los widgets auxiliares.
 
 ---
 
