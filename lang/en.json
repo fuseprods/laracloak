@@ -202,5 +202,20 @@
     "No domains (Blocked)": "No domains (Blocked)",
     ":count patterns": ":count patterns",
     "No credentials found.": "No credentials found.",
-    "Created At": "Created At"
+    "Created At": "Created At",
+    "Hello! Welcome to Laracloak": "Hello! Welcome to Laracloak",
+    "Discover a simple and secure way to connect your tools without complications. Create smart bridges to your automations while maintaining absolute control.": "Discover a simple and secure way to connect your tools without complications. Create smart bridges to your automations while maintaining absolute control.",
+    "SAFE PROXY": "SAFE PROXY",
+    "Total protection for your n8n, Make, and external API endpoints.": "Total protection for your n8n, Make, and external API endpoints.",
+    "Security without secrets": "Security without secrets",
+    "Receive and send data without ever exposing the real location of your servers. Laracloak acts as an invisibility layer for your infrastructure.": "Receive and send data without ever exposing the real location of your servers. Laracloak acts as an invisibility layer for your infrastructure.",
+    "Total Simplicity": "Total Simplicity",
+    "Your users interact with a friendly interface, while the system handles the complex part on the server.": "Your users interact with a friendly interface, while the system handles the complex part on the server.",
+    "Open Learning": "Open Learning",
+    "As an Open Source project, Laracloak is designed for you to explore how secure proxies and dynamic interfaces work.": "As an Open Source project, Laracloak is designed for you to explore how secure proxies and dynamic interfaces work.",
+    "Take a look inside": "Take a look inside",
+    "Your Dashboard here": "Your Dashboard here",
+    "Visualize all your automations at a glance.": "Visualize all your automations at a glance.",
+    "Your Dynamic Interface here": "Your Dynamic Interface here",
+    "Forms automatically generated from JSON.": "Forms automatically generated from JSON."
 }
