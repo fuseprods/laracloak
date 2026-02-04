@@ -1,0 +1,48 @@
+/* Dark Theme Variables */
+:root,
+.theme-dark {
+    /* Colors from Welcome Page Redesign */
+    --bg-body: #0f0f1a;
+    --bg-card: #1a1a2e;
+    --bg-card-hover: #23233c;
+
+    --bg-input: #23233c;
+    /* Matches card hover / darker shade */
+
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+
+    --border: rgba(255, 255, 255, 0.05);
+
+    --accent: #7c3aed;
+    --accent-hover: #6d28d9;
+
+    /* Effects */
+    --glass-blur: none;
+    --bg-gradient: none;
+
+    /* Status Colors */
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+
+    /* Map Accent to Primary for Admin Ops */
+    --primary: var(--accent);
+    --primary-hover: var(--accent-hover);
+    --primary-glow: rgba(124, 58, 237, 0.4);
+
+    /* Override Text Brand to White for Dark Theme */
+    --text-brand: var(--text-main);
+
+    --border-focus: var(--accent);
+    --bg-table-header: rgba(124, 58, 237, 0.05);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+}

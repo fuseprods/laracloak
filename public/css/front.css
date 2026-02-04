@@ -1,0 +1,13 @@
+/* Public Base CSS - Minimal reset for landing pages */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    background-color: #fdfdfc;
+    color: #1b1b18;
+}

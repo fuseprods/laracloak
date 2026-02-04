@@ -1,0 +1,42 @@
+/* Light Theme Variables */
+:root,
+.theme-light {
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-input: #f8fafc;
+
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+
+    --border: #e2e8f0;
+
+    /* Brand Accent */
+    --accent: #7c3aed;
+    --accent-hover: #6d28d9;
+
+    /* Map to Primary */
+    --primary: var(--accent);
+    --primary-hover: var(--accent-hover);
+    --primary-glow: rgba(124, 58, 237, 0.2);
+
+    --border-focus: var(--accent);
+    --bg-table-header: #f8fafc;
+
+    --glass-blur: none;
+    --bg-gradient: none;
+
+    /* Status Colors */
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+
+    /* Effects */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+}
