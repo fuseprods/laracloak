@@ -87,7 +87,7 @@ class PagesController extends Controller
             'destination_url' => $validated['destination_url'],
             'upstream_method' => $validated['upstream_method'],
             'type' => $validated['type'],
-            'config' => json_decode($validated['config'] ?? '{}', true),
+            'config' => $this->sanitizeConfig(json_decode($validated['config'] ?? '{}', true)),
             'response_filters' => array_filter(array_map('trim', explode(',', $validated['response_filters'] ?? ''))),
             'is_published' => $validated['is_published'] ?? false,
             'credential_id' => $validated['credential_id'] ?? null,
@@ -151,7 +151,7 @@ class PagesController extends Controller
             'destination_url' => $validated['destination_url'],
             'upstream_method' => $validated['upstream_method'],
             'type' => $validated['type'],
-            'config' => json_decode($validated['config'] ?? '{}', true),
+            'config' => $this->sanitizeConfig(json_decode($validated['config'] ?? '{}', true)),
             'response_filters' => array_filter(array_map('trim', explode(',', $validated['response_filters'] ?? ''))),
             'is_published' => $validated['is_published'] ?? false,
             'credential_id' => $validated['credential_id'] ?? null,
@@ -282,5 +282,21 @@ class PagesController extends Controller
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
+    }
+
+    /**
+     * Recursively sanitize strings in the config array.
+     */
+    private function sanitizeConfig($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->sanitizeConfig($value);
+            }
+        } elseif (is_string($data)) {
+            return strip_tags($data);
+        }
+
+        return $data;
     }
 }
