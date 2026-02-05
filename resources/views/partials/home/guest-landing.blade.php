@@ -122,6 +122,59 @@
         justify-content: center;
         background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-body) 100%);
         color: var(--text-muted);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .screenshot-mockup {
+        aspect-ratio: 1525 / 828;
+    }
+
+    .mockup-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .mockup-image:hover {
+        transform: scale(1.02);
+    }
+
+    .btn-github:hover {
+        transform: translateY(-3px);
+        background: #000000 !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Lightbox Styles */
+    #image-lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 9999;
+        cursor: zoom-out;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    #image-lightbox img {
+        max-width: 95%;
+        max-height: 95%;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 0 40px rgba(13, 110, 253, 0.2);
+    }
+
+    #image-lightbox.active {
+        display: flex;
     }
 </style>
 
@@ -136,14 +189,26 @@
     <div class="proxy-visual">
         <div class="proxy-node">🌐</div>
         <div class="proxy-line"></div>
-        <div class="opaque-badge">{{ __('SAFE PROXY') }}</div>
+        <div class="opaque-badge">{{ __('LARACLOAK') }}</div>
         <div class="proxy-line"></div>
         <div class="proxy-node">⚡</div>
     </div>
 
-    <p class="text-muted" style="font-size: 0.95rem;">
+    <p class="text-muted" style="margin-bottom: 2rem; font-size: 0.95rem;">
         {{ __('Total protection for your n8n, Make, and external API endpoints.') }}
     </p>
+
+    <div style="margin-top: 1rem;">
+        <a href="https://github.com/fuseprods/laracloak" target="_blank" class="btn btn-github"
+            style="display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.875rem 2rem; background: #24292f; color: #ffffff; border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block;">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            {{ __('View on GitHub') }}
+        </a>
+    </div>
 </header>
 
 <!-- Creative but consistent cards -->
@@ -177,33 +242,72 @@
         <h2 style="font-size: 2rem;">{{ __('Take a look inside') }}</h2>
     </div>
 
+    <!-- First Mockup: Real Dashboard Screenshot -->
     <div class="browser-frame mb-16">
         <div class="browser-bar">
             <div class="browser-dot"></div>
             <div class="browser-dot"></div>
             <div class="browser-dot"></div>
         </div>
-        <div class="mockup-content">
-            <div class="text-center p-4">
-                <p style="font-weight: 700; color: var(--primary);">[ {{ __('Your Dashboard here') }} ]</p>
-                <p style="font-size: 0.9rem; margin-top: 0.5rem;">
-                    {{ __('Visualize all your automations at a glance.') }}</p>
-            </div>
+        <div class="mockup-content screenshot-mockup">
+            <img src="{{ asset('img/dashboard-screenshot.png') }}" alt="{{ __('Dashboard Screenshot') }}"
+                class="mockup-image" loading="lazy" onclick="openLightbox(this.src)">
         </div>
     </div>
 
+    <!-- Spacer -->
+    <div style="height: 10rem;"></div>
+
+    <!-- Second Mockup: Interactive Forms Screenshot -->
     <div class="browser-frame">
         <div class="browser-bar">
             <div class="browser-dot"></div>
             <div class="browser-dot"></div>
             <div class="browser-dot"></div>
         </div>
-        <div class="mockup-content">
-            <div class="text-center p-4">
-                <p style="font-weight: 700; color: var(--primary);">[ {{ __('Your Dynamic Interface here') }} ]</p>
-                <p style="font-size: 0.9rem; margin-top: 0.5rem;">{{ __('Forms automatically generated from JSON.') }}
-                </p>
-            </div>
+        <div class="mockup-content screenshot-mockup">
+            <img src="{{ asset('img/form-screenshot.png') }}" alt="{{ __('Form Editor Screenshot') }}"
+                class="mockup-image" loading="lazy" onclick="openLightbox(this.src)">
         </div>
     </div>
+
+    <!-- Final CTA -->
+    <div class="text-center" style="margin-top: 6rem; padding-bottom: 4rem;">
+        <h3 style="font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-muted);">
+            {{ __('Start building your secure bridges today.') }}
+        </h3>
+        <a href="https://github.com/fuseprods/laracloak" target="_blank" class="btn btn-github"
+            style="display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2.5rem; background: #24292f; color: #ffffff; border: 1px solid rgba(255,255,255,0.1); border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" style="display: inline-block;">
+                <path
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg>
+            {{ __('Join the Project') }}
+        </a>
+    </div>
 </section>
+
+<!-- Lightbox structure -->
+<div id="image-lightbox" onclick="this.classList.remove('active')">
+    <img src="" id="lightbox-img" alt="Enlarged view">
+</div>
+
+<script>
+    function openLightbox(src) {
+        const lightbox = document.getElementById('image-lightbox');
+        const img = document.getElementById('lightbox-img');
+        if (lightbox && img) {
+            img.src = src;
+            lightbox.classList.add('active');
+        }
+    }
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const lightbox = document.getElementById('image-lightbox');
+            if (lightbox) lightbox.classList.remove('active');
+        }
+    });
+</script>

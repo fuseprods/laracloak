@@ -205,7 +205,7 @@
     "Created At": "Created At",
     "Hello! Welcome to Laracloak": "Hello! Welcome to Laracloak",
     "Discover a simple and secure way to connect your tools without complications. Create smart bridges to your automations while maintaining absolute control.": "Discover a simple and secure way to connect your tools without complications. Create smart bridges to your automations while maintaining absolute control.",
-    "SAFE PROXY": "SAFE PROXY",
+    "LARACLOAK": "LARACLOAK",
     "Total protection for your n8n, Make, and external API endpoints.": "Total protection for your n8n, Make, and external API endpoints.",
     "Security without secrets": "Security without secrets",
     "Receive and send data without ever exposing the real location of your servers. Laracloak acts as an invisibility layer for your infrastructure.": "Receive and send data without ever exposing the real location of your servers. Laracloak acts as an invisibility layer for your infrastructure.",
@@ -217,5 +217,8 @@
     "Your Dashboard here": "Your Dashboard here",
     "Visualize all your automations at a glance.": "Visualize all your automations at a glance.",
     "Your Dynamic Interface here": "Your Dynamic Interface here",
-    "Forms automatically generated from JSON.": "Forms automatically generated from JSON."
+    "Forms automatically generated from JSON.": "Forms automatically generated from JSON.",
+    "View on GitHub": "View on GitHub",
+    "Start building your secure bridges today.": "Start building your secure bridges today.",
+    "Join the Project": "Join the Project"
 }

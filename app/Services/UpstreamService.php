@@ -60,7 +60,6 @@ class UpstreamService
                         $request->withBasicAuth($credential->auth_key, $credential->auth_value);
                         break;
                     case 'header':
-                        // key is header name, value is header value
                         $request->withHeaders([$credential->auth_key => $credential->auth_value]);
                         break;
                     case 'jwt':
@@ -68,8 +67,19 @@ class UpstreamService
                         break;
                 }
             } elseif (!empty($this->apiKey)) {
-                // Fallback to legacy global key
                 $request->withHeaders([$this->authHeader => $this->apiKey]);
+            }
+
+            // 4b. Detect and Attach Files
+            foreach ($data as $key => $value) {
+                if ($value instanceof \Illuminate\Http\UploadedFile) {
+                    $request->attach(
+                        $key,
+                        fopen($value->getRealPath(), 'r'),
+                        $value->getClientOriginalName()
+                    );
+                    unset($data[$key]);
+                }
             }
 
             // 5. Execute

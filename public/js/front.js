@@ -8,14 +8,22 @@ class Api {
     static async post(url, data) {
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        const response = await fetch(url, {
+        const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': token,
-            },
-            body: JSON.stringify(data)
-        });
+            }
+        };
+
+        if (data instanceof FormData) {
+            options.body = data;
+            // Browser sets Content-Type automatically for FormData with boundary
+        } else {
+            options.headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(url, options);
 
         const contentType = response.headers.get('content-type') || '';
 
@@ -68,7 +76,9 @@ class FormHandler {
 
             // Gather Data
             const formData = new FormData(this.form);
-            const data = Object.fromEntries(formData.entries());
+            const hasFiles = Array.from(this.form.querySelectorAll('input[type="file"]')).some(input => input.files.length > 0);
+
+            const data = hasFiles ? formData : Object.fromEntries(formData.entries());
 
             try {
                 const result = await Api.post(`/front/${this.slug}/action`, data);

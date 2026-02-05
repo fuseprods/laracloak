@@ -227,7 +227,7 @@
     "Go to Panel": "Ir al Panel",
     "Hello! Welcome to Laracloak": "¡Hola! Bienvenid@ a Laracloak",
     "Discover a simple and secure way to connect your tools without complications. Create smart bridges to your automations while maintaining absolute control.": "Descubre una forma sencilla y segura de conectar tus herramientas sin complicaciones. Crea puentes inteligentes hacia tus automatizaciones manteniendo el control absoluto.",
-    "SAFE PROXY": "PROXY SEGURO",
+    "LARACLOAK": "LARACLOAK",
     "Total protection for your n8n, Make, and external API endpoints.": "Protección total para tus endpoints de n8n, Make y APIs externas.",
     "Security without secrets": "Seguridad sin secretos",
     "Receive and send data without ever exposing the real location of your servers. Laracloak acts as an invisibility layer for your infrastructure.": "Recibe y envía datos sin exponer jamás la ubicación real de tus servidores. Laracloak actúa como una capa de invisibilidad para tu infraestructura.",
@@ -239,5 +239,8 @@
     "Your Dashboard here": "Tu Dashboard aquí",
     "Visualize all your automations at a glance.": "Visualiza de un vistazo todas tus automatizaciones.",
     "Your Dynamic Interface here": "Tu Interfaz Dinámica aquí",
-    "Forms automatically generated from JSON.": "Formularios generados automáticamente desde JSON."
+    "Forms automatically generated from JSON.": "Formularios generados automáticamente desde JSON.",
+    "View on GitHub": "Ver en GitHub",
+    "Start building your secure bridges today.": "Empieza a construir tus puentes seguros hoy mismo.",
+    "Join the Project": "Únete al proyecto"
 }
