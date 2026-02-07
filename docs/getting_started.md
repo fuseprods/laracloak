@@ -10,7 +10,7 @@ Ensure you have the following components installed on your server or local envir
 - **Composer** (PHP dependency manager)
 - **Node.js 18+ & NPM** (To compile static assets)
 - **Web Server**: Apache, Nginx, or Laragon (recommended on Windows)
-- **Database**: SQLite (default), MySQL, or PostgreSQL
+- **Database**: MySQL/MariaDB (Recommended for production), or SQLite
 
 ## 🚀 Step-by-Step Installation
 
@@ -36,14 +36,31 @@ php artisan key:generate
 ```
 
 ### 4. Prepare the Database
-By default, Laracloak uses SQLite. Ensure the file exists and run migrations with initial data (seeders):
-```bash
-# Create the database file if it doesn't exist
-# On Windows: type nul > database/database.sqlite
-# On Linux/Mac: touch database/database.sqlite
+> [!TIP]
+> **Recommendation**: For production environments, we highly recommend using **MySQL 8.0+** or **MariaDB**. SQLite is excellent for testing or small local instances.
 
-php artisan migrate --seed
-```
+#### Option A: MySQL / MariaDB (Recommended)
+1. Create a blank database (e.g., `laracloak`).
+2. Update your `.env` file with your credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=laracloak
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
+3. Run migrations and initial data (seeders):
+   ```bash
+   php artisan migrate --seed
+   ```
+
+#### Option B: SQLite
+1. Ensure your `.env` is set to SQLite: `DB_CONNECTION=sqlite`.
+2. Create the database file:
+   - **Windows**: `type nul > database/database.sqlite`
+   - **Linux/Mac**: `touch database/database.sqlite`
+3. Run migrations: `php artisan migrate --seed`
 
 ### 5. Start the application
 If you are using the built-in PHP server:
@@ -51,13 +68,13 @@ If you are using the built-in PHP server:
 php artisan serve
 ```
 
-## 🔐 Initial Admin Access
+After running the `--seed` command, a default admin user is created. You can customize these credentials in your `.env` file before seeding:
 
-After running the `--seed` command, a default admin user is created:
+- **Initial Email**: `INITIAL_ADMIN_EMAIL` (Default: `admin@laracloak.com`)
+- **Initial Password**: `INITIAL_ADMIN_PASSWORD` (Default: `password`)
 
-- **URL**: `http://localhost:8000/login`
-- **Email**: `admin@laracloak.com`
-- **Password**: `password` (We recommend changing it immediately in your profile).
+> [!IMPORTANT]
+> Change these values in your `.env` before running `php artisan migrate --seed` for a more secure initial setup.
 
 ![Placeholder: Login screen screenshot](img/login_screen.png)
 

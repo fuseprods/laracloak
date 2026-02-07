@@ -1,6 +1,6 @@
 - **Language / Idioma**
-  - [🇺🇸 English](README.md)
-  - [🇪🇸 Español](es/README.md)
+  - [🇺🇸 English](/)
+  - [🇪🇸 Español](/es/)
 
 - **Getting Started**
   - [Quick Start](getting_started.md)

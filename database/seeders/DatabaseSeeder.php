@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
         // 1. Base Administrator
         \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'email' => 'admin@laracloak.local',
-            'password' => \Illuminate\Support\Facades\Hash::make('yoursecurepassword'),
+            'email' => env('INITIAL_ADMIN_EMAIL', 'admin@laracloak.com'),
+            'password' => \Illuminate\Support\Facades\Hash::make(env('INITIAL_ADMIN_PASSWORD', 'password')),
             'role' => 'admin',
         ]);
 

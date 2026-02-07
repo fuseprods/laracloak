@@ -1,6 +1,6 @@
 - **Language / Idioma**
-  - [🇺🇸 English](../README.md)
-  - [🇪🇸 Español](README.md)
+  - [🇺🇸 English](/)
+  - [🇪🇸 Español](/es/)
 
 - **Guía de Inicio**
   - [Inicio](README.md)
