@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="content-section full-width">
         <div class="table-container">
             <table>
                 <thead>

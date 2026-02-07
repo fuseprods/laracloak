@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="content-section full-width">
         <form method="GET" action="{{ route('panel.forms.index') }}"
             style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
             <div style="flex: 1;">

@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="card" style="max-width: 900px; margin: 0 auto;">
+    <div class="content-section wide">
         <form method="POST" action="{{ route('panel.dashboards.update', $dashboard) }}">
             @csrf
             @method('PUT')
@@ -166,11 +166,99 @@
                 });
             </script>
 
+            <!-- UI Configuration - Visual Builder -->
             <div class="form-group">
-                <label for="config">{{ __('Dashboard Widgets (JSON)') }}</label>
-                <textarea id="config" name="config" rows="12"
-                    style="font-family: monospace; background: #0f172a; color: #a5b4fc; padding: 1rem;">{{ old('config', json_encode($dashboard->config, JSON_PRETTY_PRINT)) }}</textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <label style="margin: 0;">{{ __('Dashboard Widgets') }}</label>
+                    <button type="button" id="toggle-json-mode" class="btn btn-sm"
+                        style="background: var(--bg-card); border: 1px solid var(--border);">
+                        <span id="toggle-json-label">⚙️ {{ __('Advanced (JSON)') }}</span>
+                    </button>
+                </div>
+
+                <!-- Visual Builder -->
+                <div id="visual-builder-container"></div>
+
+                <!-- JSON Mode (Hidden by default) -->
+                <div id="json-mode" style="display: none;">
+                    <textarea id="config" name="config" rows="12"
+                        style="width: 100%; font-family: monospace; background: #0f172a; color: #a5b4fc; padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem;"
+                        placeholder='{ ... }'>{{ old('config', json_encode($dashboard->config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)) }}</textarea>
+                </div>
             </div>
+
+            <link rel="stylesheet" href="{{ asset('css/page-builder.css') }}">
+            <script src="{{ asset('js/page-builder.js') }}"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const container = document.getElementById('visual-builder-container');
+                    const jsonTextarea = document.getElementById('config');
+                    const jsonMode = document.getElementById('json-mode');
+                    const toggleBtn = document.getElementById('toggle-json-mode');
+                    const toggleLabel = document.getElementById('toggle-json-label');
+
+                    let isJsonMode = false;
+                    let initialConfig = {};
+
+                    try {
+                        const configText = jsonTextarea.value.trim();
+                        initialConfig = configText ? JSON.parse(configText) : {};
+                    } catch (e) {
+                        initialConfig = {};
+                    }
+
+                    @include('panel.pages.partials.page-builder-translations')
+                    const builder = new PageBuilder(container, {
+                        pageType: 'dashboard',
+                        config: initialConfig,
+                        translations: window.pageBuilderTranslations,
+                        onConfigChange: function (config) {
+                            jsonTextarea.value = JSON.stringify(config, null, 2);
+                        }
+                    });
+
+                    window.pageBuilder = builder;
+
+                    // Update test call to populate available fields
+                    document.getElementById('btn-test-upstream').addEventListener('click', function () {
+                        setTimeout(function () {
+                            const output = document.getElementById('test-output');
+                            if (output.textContent && window.pageBuilder) {
+                                try {
+                                    const data = JSON.parse(output.textContent);
+                                    if (typeof extractFieldKeys === 'function') {
+                                        const fields = extractFieldKeys(data);
+                                        window.pageBuilder.setAvailableFields(fields);
+                                    }
+                                } catch (e) { }
+                            }
+                        }, 2000);
+                    });
+
+                    toggleBtn.addEventListener('click', function () {
+                        isJsonMode = !isJsonMode;
+
+                        if (isJsonMode) {
+                            container.style.display = 'none';
+                            jsonMode.style.display = 'block';
+                            toggleLabel.innerHTML = '🎨 {{ __("Visual Builder") }}';
+                        } else {
+                            try {
+                                const newConfig = JSON.parse(jsonTextarea.value);
+                                builder.rows = [];
+                                builder.loadConfig(newConfig);
+                            } catch (e) {
+                                alert('{{ __("Invalid JSON. Please fix the syntax before switching to visual mode.") }}');
+                                isJsonMode = true;
+                                return;
+                            }
+                            container.style.display = 'block';
+                            jsonMode.style.display = 'none';
+                            toggleLabel.innerHTML = '⚙️ {{ __("Advanced (JSON)") }}';
+                        }
+                    });
+                });
+            </script>
 
             @include('panel.pages.partials.permissions', ['object' => $dashboard])
 

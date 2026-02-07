@@ -1,0 +1,533 @@
+/**
+ * Page Builder - Visual Editor Styles
+ */
+
+.page-builder {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+/* Header */
+.pb-header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.pb-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pb-title-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.pb-title-input {
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.pb-title-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Palette */
+.pb-palette {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(16, 185, 129, 0.1));
+    border: 1px solid var(--primary);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.pb-palette-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.pb-palette-hint {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.pb-palette-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pb-palette-field {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+    font-family: monospace;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pb-palette-field:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* Rows */
+.pb-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pb-row {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.pb-row-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--border);
+}
+
+.pb-row-handle {
+    cursor: grab;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    user-select: none;
+}
+
+.pb-row-handle:active {
+    cursor: grabbing;
+}
+
+.pb-structure-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(124, 58, 237, 0.2);
+    border: 1px solid var(--primary);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pb-structure-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.pb-row-delete {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.pb-row-delete:hover {
+    opacity: 1;
+}
+
+/* Columns Grid */
+.pb-row-columns {
+    display: grid;
+    grid-template-columns: var(--layout, repeat(var(--cols, 2), 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Widget */
+.pb-widget {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    min-height: 100px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pb-widget:hover {
+    border-color: var(--text-muted);
+}
+
+.pb-widget.selected {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.pb-widget-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.pb-widget-type {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.875rem;
+}
+
+.pb-widget-delete {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.pb-widget-delete:hover {
+    opacity: 1;
+}
+
+/* Widget Settings */
+.pb-widget-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.pb-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pb-setting label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.pb-setting input[type="text"],
+.pb-setting input[type="number"],
+.pb-setting select {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.8125rem;
+}
+
+.pb-setting input:focus,
+.pb-setting select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.pb-setting-checkbox {
+    flex-direction: row;
+    align-items: center;
+}
+
+.pb-setting-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.pb-setting-checkbox input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--primary);
+}
+
+/* Add Row Button */
+.pb-add-row-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: transparent;
+    border: 2px dashed var(--border);
+    border-radius: 0.5rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pb-add-row-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(124, 58, 237, 0.05);
+}
+
+/* Drag and Drop States */
+.pb-row.dragging {
+    opacity: 0.5;
+    border-style: dashed;
+}
+
+.pb-row.drag-over {
+    border-color: var(--primary);
+    background: rgba(124, 58, 237, 0.1);
+}
+
+.pb-row.drag-over-top {
+    border-top: 3px solid var(--primary);
+}
+
+.pb-row.drag-over-bottom {
+    border-bottom: 3px solid var(--primary);
+}
+
+/* Widget dragging */
+.pb-widget.dragging {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: var(--primary);
+}
+
+.pb-widget.drag-over {
+    border-color: var(--primary);
+    background: rgba(124, 58, 237, 0.15);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+}
+
+/* Drag handles cursor */
+.pb-row-handle {
+    cursor: grab;
+}
+
+.pb-row-handle:active {
+    cursor: grabbing;
+}
+
+.pb-widget[draggable="true"] {
+    cursor: grab;
+}
+
+.pb-widget[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+/* Prevent text selection during drag */
+.pb-row.dragging *,
+.pb-widget.dragging * {
+    user-select: none;
+}
+
+/* Layout Picker Modal */
+.pb-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.pb-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: pbModalFadeIn 0.2s ease-out;
+}
+
+@keyframes pbModalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.pb-modal-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pb-modal-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.pb-modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.pb-modal-content {
+    padding: 1.5rem;
+}
+
+/* Step 1: Column Count */
+.pb-col-count-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.pb-col-opt {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.pb-col-opt:hover {
+    border-color: var(--primary);
+    background: rgba(124, 58, 237, 0.1);
+}
+
+.pb-col-opt-num {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.pb-col-opt-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Step 2: Patterns */
+.pb-pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.pb-pattern-opt {
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.pb-pattern-opt:hover {
+    transform: translateY(-2px);
+}
+
+.pb-pattern-preview {
+    height: 60px;
+    display: grid;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.15s;
+}
+
+.pb-pattern-opt:hover .pb-pattern-preview {
+    border-color: var(--primary);
+}
+
+.pb-pattern-box {
+    background: var(--text-muted);
+    opacity: 0.4;
+    border-radius: 2px;
+}
+
+.pb-pattern-opt:hover .pb-pattern-box {
+    background: var(--primary);
+    opacity: 0.6;
+}
+
+.pb-pattern-label {
+    display: block;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.pb-modal-footer {
+    padding: 1rem 1.25rem;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-start;
+}
+
+.pb-back-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pb-row-columns {
+        grid-template-columns: 1fr !important;
+    }
+
+    .pb-header {
+        grid-template-columns: 1fr;
+    }
+
+    .pb-modal {
+        max-width: 90%;
+    }
+}

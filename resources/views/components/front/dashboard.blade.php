@@ -74,48 +74,43 @@
         $widgets = $config['widgets'] ?? [];
         $rows = [];
         $currentRow = [];
+        $currentLayout = null;
 
         foreach ($widgets as $widget) {
             $type = $widget['type'] ?? 'unknown';
 
             if ($type === 'break') {
-                if (!empty($currentRow)) {
-                    $rows[] = $currentRow;
-                    $currentRow = [];
+                if (!empty($currentRow) || $currentLayout !== null) {
+                    $rows[] = ['widgets' => $currentRow, 'layout' => $currentLayout];
                 }
-                continue;
-            }
-
-            if ($type === 'none') continue;
-
-            // Auto-break if limit reached (Max 6 columns)
-            if (count($currentRow) >= 6) {
-                $rows[] = $currentRow;
                 $currentRow = [];
+                $currentLayout = $widget['layout'] ?? null;
+                continue;
             }
 
             $currentRow[] = $widget;
         }
         if (!empty($currentRow)) {
-            $rows[] = $currentRow;
+            $rows[] = ['widgets' => $currentRow, 'layout' => $currentLayout];
         }
     @endphp
 
     @foreach($rows as $row)
-        @php $count = count($row); @endphp
+        @php 
+            $count = count($row['widgets']);
+            $layout = $row['layout'] ?? null;
+        @endphp
         
-        <div class="dashboard-row" style="--cols: {{ $count }};">
-            @foreach($row as $widget)
+        <div class="dashboard-row" style="{{ $layout ? "--layout: $layout;" : "--cols: $count;" }}">
+            @foreach($row['widgets'] as $widget)
                 @php 
                     $type = $widget['type'] ?? 'unknown'; 
-                    // Handling full width types inside the grid by preserving them or putting them in 1-col rows?
-                    // If a row has a table, typically users put a break before/after.
-                    // If they didn't, we render it as just another widget, but Tables might overflow if squeezed.
-                    // Using min-width: 0 helps prevent grid blowout.
                 @endphp
-
-                @if(in_array($type, ['table', 'leaderboard', 'timeline', 'log-stream', 'html-card']))
-                     <div class="glass-card widget-container col-span-full" 
+                
+                @if($type === 'none')
+                    <div class="widget-placeholder"></div>
+                @elseif(in_array($type, ['table', 'leaderboard', 'timeline', 'log-stream', 'chart', 'gauge', 'progress-card', 'sparkline']))
+                    <div class="glass-card widget-container" 
                           data-widget-type="{{ $type }}"
                           data-widget-key="{{ $widget['key'] ?? '' }}" 
                           data-config='@json($widget)'>
@@ -126,11 +121,11 @@
                         </div>
                     </div>
                 @else
-                    {{-- Visual Style for static/alert widgets --}}
+                    {{-- Visual Style for static/alert/kpi widgets --}}
                     @php
                         $statusMap = ['success' => 'var(--success)', 'warning' => 'var(--warning)', 'danger' => 'var(--danger)', 'info' => 'var(--info)'];
                         $borderStyle = '';
-                        if(in_array($type, ['alert-card', 'info']) && isset($widget['status'])) {
+                        if(in_array($type, ['alert-card', 'info', 'kpi']) && isset($widget['status'])) {
                             $color = $statusMap[$widget['status']] ?? 'var(--info)';
                             $borderStyle = "border-left: 4px solid $color;";
                         }
@@ -142,11 +137,9 @@
                         data-config='@json($widget)'
                         style="{{ $borderStyle }}">
                         
-                        {{-- Initial Skeleton --}}
                         <div class="stat-label">{{ $widget['label'] ?? '' }}</div>
                         <div class="widget-body">
                             @if($type === 'info')
-                                {{-- Static Content for Info Widget --}}
                                 @if(!empty($widget['title']) || !empty($widget['value']))
                                     <div class="stat-value" style="font-size:1.2rem;">{{ $widget['value'] ?? $widget['title'] ?? '' }}</div>
                                 @endif

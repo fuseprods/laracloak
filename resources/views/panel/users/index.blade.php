@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="content-section full-width">
         <form method="GET" action="{{ route('panel.users') }}" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
             <div style="flex: 1;">
                 <input type="text" name="search" placeholder="{{ __('Search by name or email...') }}"

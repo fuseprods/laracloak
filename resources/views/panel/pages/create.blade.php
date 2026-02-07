@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="card" style="max-width: 900px; margin: 0 auto;">
+    <div class="content-section wide">
         <form method="POST" action="{{ route('panel.pages.store') }}">
             @csrf
 
@@ -184,6 +184,12 @@
                             status.textContent = `HTTP ${result.status}`;
                             status.style.color = '#10b981';
                             output.textContent = result.formatted;
+                            
+                            // Extract fields and pass to PageBuilder
+                            if (result.data && window.pageBuilder && typeof extractFieldKeys === 'function') {
+                                const fields = extractFieldKeys(result.data);
+                                window.pageBuilder.setAvailableFields(fields);
+                            }
                         } else {
                             status.textContent = 'ERROR';
                             status.style.color = '#ef4444';
@@ -201,20 +207,99 @@
                 });
             </script>
 
-            <!-- UI Configuration -->
+            <!-- UI Configuration - Visual Builder -->
             <div class="form-group">
-                <label for="config">{{ __('UI Configuration (JSON)') }}</label>
-                <textarea id="config" name="config" rows="10"
-                    style="width: 100%; padding: 1rem; background: #0f172a; border: 1px solid var(--border); border-radius: 0.5rem; color: #a5b4fc; font-family: monospace; line-height: 1.5;"
-                    placeholder='{
-                "fields": [
-                    { "name": "email", "label": "Email", "type": "email" }
-                ]
-            }'>{{ old('config') }}</textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <label style="margin: 0;">{{ __('UI Configuration') }}</label>
+                    <button type="button" id="toggle-json-mode" class="btn btn-sm" style="background: var(--bg-card); border: 1px solid var(--border);">
+                        <span id="toggle-json-label">⚙️ {{ __('Advanced (JSON)') }}</span>
+                    </button>
+                </div>
+                
+                <!-- Visual Builder -->
+                <div id="visual-builder-container"></div>
+                
+                <!-- JSON Mode (Hidden by default) -->
+                <div id="json-mode" style="display: none;">
+                    <textarea id="config" name="config" rows="15"
+                        style="width: 100%; padding: 1rem; background: #0f172a; border: 1px solid var(--border); border-radius: 0.5rem; color: #a5b4fc; font-family: monospace; line-height: 1.5;"
+                        placeholder='{ ... }'>{{ old('config', '{}') }}</textarea>
+                </div>
+                
                 @error('config')
                     <div style="color: var(--danger); font-size: 0.875rem; margin-top: 0.5rem;">{{ $message }}</div>
                 @enderror
             </div>
+            
+            <link rel="stylesheet" href="{{ asset('css/page-builder.css') }}">
+            <script src="{{ asset('js/page-builder.js') }}"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const container = document.getElementById('visual-builder-container');
+                    const jsonTextarea = document.getElementById('config');
+                    const jsonMode = document.getElementById('json-mode');
+                    const toggleBtn = document.getElementById('toggle-json-mode');
+                    const toggleLabel = document.getElementById('toggle-json-label');
+                    const typeSelect = document.getElementById('type');
+                    
+                    let isJsonMode = false;
+                    let currentBuilder = null;
+                    
+                    function initBuilder() {
+                        const pageType = typeSelect.value;
+                        let initialConfig = {};
+                        
+                        try {
+                            const configText = jsonTextarea.value.trim();
+                            initialConfig = configText && configText !== '{}' ? JSON.parse(configText) : {};
+                        } catch (e) {
+                            initialConfig = {};
+                        }
+                        
+                        currentBuilder = new PageBuilder(container, {
+                            pageType: pageType,
+                            config: initialConfig,
+                            onConfigChange: function(config) {
+                                jsonTextarea.value = JSON.stringify(config, null, 2);
+                            }
+                        });
+                        
+                        window.pageBuilder = currentBuilder;
+                    }
+                    
+                    // Initialize on load
+                    initBuilder();
+                    
+                    // Reinitialize when page type changes
+                    typeSelect.addEventListener('change', function() {
+                        jsonTextarea.value = '{}';
+                        initBuilder();
+                    });
+                    
+                    // Toggle JSON Mode
+                    toggleBtn.addEventListener('click', function() {
+                        isJsonMode = !isJsonMode;
+                        
+                        if (isJsonMode) {
+                            container.style.display = 'none';
+                            jsonMode.style.display = 'block';
+                            toggleLabel.innerHTML = '🎨 {{ __("Visual Builder") }}';
+                        } else {
+                            try {
+                                const newConfig = JSON.parse(jsonTextarea.value);
+                                initBuilder();
+                            } catch (e) {
+                                alert('{{ __("Invalid JSON. Please fix the syntax before switching to visual mode.") }}');
+                                isJsonMode = true;
+                                return;
+                            }
+                            container.style.display = 'block';
+                            jsonMode.style.display = 'none';
+                            toggleLabel.innerHTML = '⚙️ {{ __("Advanced (JSON)") }}';
+                        }
+                    });
+                });
+            </script>
 
             <!-- Publishing -->
             <div class="form-group">

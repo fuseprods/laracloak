@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <strong>Proxy Seguro Open Source para Automatizaciones</strong>
+  <strong>Open Source Secure Proxy for Automations</strong>
 </p>
 
 <p align="center">
@@ -16,84 +16,84 @@
 
 ---
 
-## 🚀 Descripción
+## 🚀 Description
 
-Laracloak es una plataforma **open source** construida con **Laravel** que actúa como un "front-office" seguro y un "proxy opaco" para instancias externas (n8n, Make, APIs, etc.). Su objetivo es permitir la interacción con flujos de automatización **sin exponer la infraestructura upstream** al usuario final. Ha sido desarrollado con Google Antigravity y diferentes modelos (Gemini, Claude...) por lo que es posible que existan incongruencias en el código y algunos fallos críticos de seguridad. **Este es un proyecto en desarrollo y no recomendado para entornos de producción**
+Laracloak is an **open source** platform built with **Laravel** that acts as a secure "front office" and an "opaque proxy" for external instances (n8n, Make, APIs, etc.). Its goal is to enable interaction with automation flows **without exposing upstream infrastructure** to end users. It has been developed with Google Antigravity and different models (Gemini, Claude...) so it’s possible that there are inconsistencies in the code and some critical security flaws. **This is a project under development and not recommended for production environments.**
 
-### Características Clave
-- **Opacidad de Endpoints**: Ningún detalle del endpoint (URLs, headers, errores internos) es visible en el navegador o logs de red.
-- **Autorización "Default Deny"**: Sistema de permisos granular a nivel de página, categoría y grupo.
-- **Renderizado Dinámico**: Interfaces generadas a partir de configuraciones JSON controladas desde el panel de administración.
-- **Sanitización de Respuestas**: Filtrado automático de claves sensibles en respuestas.
-- **Personalización Visual**: Temas integrados (Dark, Light, Glassmorphism) seleccionables por el usuario.
-
----
-
-## 🏗️ Arquitectura y Flujo de Datos
-
-El sistema se basa en un modelo de capas para garantizar la máxima seguridad:
-
-1.  **Capa de Presentación (Blade)**: El usuario interactúa con una interfaz Laravel pura.
-2.  **Capa de Proxy (FrontController)**: Valida permisos y reenvía peticiones al servicio upstream.
-3.  **Capa de Integración (UpstreamService)**: Gestiona la comunicación segura con el endpoint usando credenciales encriptadas.
-4.  **Upstream**: Ejecuta la lógica del proceso y devuelve resultados que son sanitizados antes de llegar al usuario.
+### Key Features
+- **Endpoint Opacity**: No endpoint details (URLs, headers, internal errors) are visible in the browser or network logs.
+- **"Default Deny" Authorization**: Granular permission system at page, category, and group level.
+- **Dynamic Rendering**: Interfaces generated from JSON configurations managed from the admin panel.
+- **Response Sanitization**: Automatic filtering of sensitive keys in responses.
+- **Visual Customization**: Built-in themes (Dark, Light, Glassmorphism) selectable by the user.
 
 ---
 
-## 👥 Roles y Funcionalidades
+## 🏗️ Architecture and Data Flow
 
-### 🔐 Administrador
-*   **Gestión de Usuarios**: Crear, editar y eliminar cuentas de usuario.
-*   **Matriz de Permisos**: Asignar acceso de "Ver" o "Editar" de forma individual o mediante **Grupos**.
-*   **Organización por Categorías**: Agrupar páginas para facilitar la gestión masiva de permisos.
-*   **Gestión de Credenciales**: Configurar tokens de acceso y credenciales para los servicios upstream de forma encriptada.
-*   **Logs de Auditoría**: Trazabilidad completa de quién hizo qué y cuándo.
+The system is based on a layered model to ensure maximum security:
+
+1. **Presentation Layer (Blade)**: The user interacts with a pure Laravel interface.
+2. **Proxy Layer (FrontController)**: Validates permissions and forwards requests to the upstream service.
+3. **Integration Layer (UpstreamService)**: Manages secure communication with the endpoint using encrypted credentials.
+4. **Upstream**: Executes the process logic and returns results that are sanitized before reaching the user.
+
+---
+
+## 👥 Roles and Features
+
+### 🔐 Administrator
+* **User Management**: Create, edit, and delete user accounts.
+* **Permission Matrix**: Assign "View" or "Edit" access individually or via **Groups**.
+* **Category Organization**: Group pages to simplify bulk permission management.
+* **Credential Management**: Configure access tokens and credentials for upstream services in encrypted form.
+* **Audit Logs**: Full traceability of who did what and when.
 
 ### 📝 Editor
-*   **Gestión de Páginas**: Crear slugs amigables para el front-end.
-*   **Configuración JSON**: Definir la estructura de la página y el mapeo de datos entre el front-end y endpoint.
-*   **Publicación**: Controlar la visibilidad de las herramientas de proxy.
+* **Page Management**: Create friendly slugs for the front-end.
+* **JSON Configuration**: Define the page structure and data mapping between the front-end and the endpoint.
+* **Publishing**: Control the visibility of proxy tools.
 
-### 👤 Usuario Final
-*   **Dashboard Personalizado**: Acceso solo a las páginas para las que ha sido autorizado.
-*   **Interacción Segura**: Uso de formularios y visualizadores de datos sin riesgo de exponer la infraestructura.
-*   **Perfil y Temas**: Personalización de la experiencia visual mediante selectores de tema.
-
----
-
-## 🛡️ Sistema de Permisos
-
-El sistema utiliza relaciones **polimórficas** para permitir una flexibilidad total:
-- **Usuario -> Página**: Permiso directo.
-- **Usuario -> Grupo -> Página**: Permiso heredado por pertenencia a grupo.
-- **Usuario -> Categoría**: Acceso a todas las páginas dentro de esa categoría.
-- **Usuario -> Grupo -> Categoría**: Combinación de lo anterior.
+### 👤 End User
+* **Personalized Dashboard**: Access only the pages they have been authorized for.
+* **Secure Interaction**: Use forms and data viewers without risking infrastructure exposure.
+* **Profile and Themes**: Customize the visual experience via theme selectors.
 
 ---
 
-## 🛠️ Instalación y Configuración
+## 🛡️ Permissions System
 
-1.  **Clonar el repositorio**.
-2.  **Instalar dependencias**:
+The system uses **polymorphic** relationships to allow full flexibility:
+- **User -> Page**: Direct permission.
+- **User -> Group -> Page**: Inherited permission through group membership.
+- **User -> Category**: Access to all pages within that category.
+- **User -> Group -> Category**: Combination of the above.
+
+---
+
+## 🛠️ Installation and Setup
+
+1. **Clone the repository**.
+2. **Install dependencies**:
     ```cmd
     composer install
     npm install && npm run build
     ```
-3.  **Configuración de entorno**:
+3. **Environment configuration**:
     ```cmd
     cp .env.example .env
     php artisan key:generate
     ```
-4.  **Migraciones y Seeders**:
+4. **Migrations and Seeders**:
     ```cmd
     php artisan migrate --seed
     ```
 
 ---
 
-## ⚠️ Notas de Desarrollo (Windows)
+## ⚠️ Development Notes (Windows)
 
-Debido a comportamientos específicos de la shell en Windows, todos los comandos de ejecución de agentes tuvieron que seguir este formato para evitar errores:
+Due to Windows-specific shell behavior, all agent execution commands had to follow this format to avoid errors:
 
 ```cmd
 cmd /c <your_command> & ::
@@ -103,11 +103,11 @@ cmd /c <your_command> & ::
 
 ## 📝 To-Do
 
-- **Mejorar editor de paneles/formularios**: La zona de edición de texto es incómoda y hay que redimensionarla manualmente. Un editor con marcado o directamente algo drag&drop con diferentes widgets sería valorable.
-- **JWT**: Actualmente no está bien implementado, hay que darle una vuelta al asunto.
-- **Grid**: Simplificar la distribución de elementos en formularios/paneles mediante filas y columnas de forma más elegante que los widgets auxiliares.
+- **Improve the panel/form editor**: The text editing area is uncomfortable and has to be manually resized. An editor with markup support—or even a drag & drop approach with different widgets—would be valuable.
+- **JWT**: Currently not properly implemented; it needs to be revisited.
+- **Grid**: Simplify the layout of elements in forms/panels using rows and columns in a more elegant way than the auxiliary widgets.
 
 ---
 
-## 📄 Licencia
-Este proyecto es software de código abierto bajo la licencia [MIT](https://opensource.org/licenses/MIT).
+## 📄 License
+This project is open source software under the [MIT](https://opensource.org/licenses/MIT) license.

@@ -6,52 +6,99 @@
         <p class="subtitle text-center">{{ $config['description'] }}</p>
     @endif
 
+    @php
+        $fields = $config['fields'] ?? [];
+        $rows = [];
+        $currentRow = [];
+        $currentLayout = null;
+
+        foreach ($fields as $field) {
+            $type = $field['type'] ?? 'text';
+
+            if ($type === 'break') {
+                if (!empty($currentRow) || $currentLayout !== null) {
+                    $rows[] = ['fields' => $currentRow, 'layout' => $currentLayout];
+                }
+                $currentRow = [];
+                $currentLayout = $field['layout'] ?? null;
+                continue;
+            }
+
+            // if ($type === 'none') continue; // This line is removed
+
+            // Auto-break if limit reached (Max 6 columns) // This block is removed
+            // if (count($currentRow) >= 6) {
+            //     $rows[] = ['fields' => $currentRow, 'layout' => $currentLayout];
+            //     $currentRow = [];
+            //     $currentLayout = null;
+            // }
+
+            $currentRow[] = $field;
+        }
+        if (!empty($currentRow)) {
+            $rows[] = ['fields' => $currentRow, 'layout' => $currentLayout];
+        }
+    @endphp
+
     <form id="dynamic-form" data-slug="{{ $slug }}">
         <div id="form-error" class="alert alert-error" style="display: none;"></div>
         <div id="form-success" class="alert alert-success" style="display: none;"></div>
 
-        @foreach($config['fields'] ?? [] as $field)
-            <div class="form-group">
-                <label class="form-label">
-                    {{ $field['label'] ?? $field['name'] }}
-                    @if(!empty($field['required'])) <span class="text-danger">*</span> @endif
-                </label>
+        @foreach($rows as $row)
+            @php 
+                $count = count($row['fields']);
+                $layout = $row['layout'] ?? null;
+            @endphp
+            <div class="dashboard-row" style="{{ $layout ? "--layout: $layout;" : "--cols: $count;" }}">
+                @foreach($row['fields'] as $field)
+                    @php $type = $field['type'] ?? 'text'; @endphp
 
-                @if(($field['type'] ?? 'text') === 'textarea')
-                    <textarea name="{{ $field['name'] }}" class="form-control" placeholder="{{ $field['placeholder'] ?? '' }}"
-                        @if(!empty($field['required'])) required @endif></textarea>
+                    @if($type === 'none')
+                        <div class="form-group-placeholder"></div>
+                    @else
+                        <div class="form-group">
+                            <label class="form-label">
+                                {{ $field['label'] ?? $field['name'] ?? '' }}
+                                @if(!empty($field['required'])) <span class="text-danger">*</span> @endif
+                            </label>
 
-                @elseif(($field['type'] ?? 'text') === 'select')
-                    <select name="{{ $field['name'] }}" class="form-control" @if(!empty($field['required'])) required @endif>
-                        @foreach($field['options'] ?? [] as $option)
-                            @if(is_array($option))
-                                <option value="{{ $option['value'] ?? '' }}">{{ $option['label'] ?? ($option['value'] ?? '') }}</option>
+                            @if($type === 'textarea')
+                                <textarea name="{{ $field['name'] }}" class="form-control" placeholder="{{ $field['placeholder'] ?? '' }}"
+                                    @if(!empty($field['required'])) required @endif></textarea>
+
+                            @elseif($type === 'select')
+                                <select name="{{ $field['name'] }}" class="form-control" @if(!empty($field['required'])) required @endif>
+                                    @foreach($field['options'] ?? [] as $option)
+                                        @if(is_array($option))
+                                            <option value="{{ $option['value'] ?? '' }}">{{ $option['label'] ?? ($option['value'] ?? '') }}</option>
+                                        @else
+                                            <option value="{{ $option }}">{{ $option }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+
+                            @elseif($type === 'file')
+                                <div class="file-input-wrapper">
+                                    <input type="file" name="{{ $field['name'] }}" class="form-control" @if(!empty($field['required'])) required @endif>
+                                    <small class="text-muted">{{ __('Max size: 5MB') }}</small>
+                                </div>
+
+                            @elseif($type === 'rating')
+                                <div class="star-rating">
+                                    @for($i = 5; $i >= 1; $i--)
+                                        <input type="radio" id="star{{ $i }}-{{ $field['name'] }}" name="{{ $field['name'] }}" value="{{ $i }}"
+                                            {{ !empty($field['required']) && $i == 0 ? 'required' : '' }} />
+                                        <label for="star{{ $i }}-{{ $field['name'] }}" title="{{ $i }} stars">★</label>
+                                    @endfor
+                                </div>
+
                             @else
-                                <option value="{{ $option }}">{{ $option }}</option>
+                                <input type="{{ $type }}" name="{{ $field['name'] ?? '' }}" class="form-control"
+                                    placeholder="{{ $field['placeholder'] ?? '' }}" @if(!empty($field['required'])) required @endif>
                             @endif
-                        @endforeach
-                    </select>
-
-                @elseif(($field['type'] ?? 'text') === 'file')
-                    <div class="file-input-wrapper">
-                        <input type="file" name="{{ $field['name'] }}" class="form-control" @if(!empty($field['required']))
-                        required @endif>
-                        <small class="text-muted">{{ __('Max size: 5MB') }}</small>
-                    </div>
-
-                @elseif(($field['type'] ?? 'text') === 'rating')
-                    <div class="star-rating">
-                        @for($i = 5; $i >= 1; $i--)
-                            <input type="radio" id="star{{ $i }}-{{ $field['name'] }}" name="{{ $field['name'] }}" value="{{ $i }}"
-                                {{ !empty($field['required']) && $i == 0 ? 'required' : '' }} />
-                            <label for="star{{ $i }}-{{ $field['name'] }}" title="{{ $i }} stars">★</label>
-                        @endfor
-                    </div>
-
-                @else
-                    <input type="{{ $field['type'] ?? 'text' }}" name="{{ $field['name'] }}" class="form-control"
-                        placeholder="{{ $field['placeholder'] ?? '' }}" @if(!empty($field['required'])) required @endif>
-                @endif
+                        </div>
+                    @endif
+                @endforeach
             </div>
         @endforeach
 

@@ -250,7 +250,7 @@ textarea.form-control {
 
 @media (min-width: 900px) {
     .dashboard-row {
-        grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+        grid-template-columns: var(--layout, repeat(var(--cols, 1), minmax(0, 1fr)));
     }
 }
 
@@ -711,6 +711,48 @@ textarea.form-control {
     transform: translateY(-2px);
     background-color: var(--bg-card-hover, var(--bg-card));
     border-color: var(--primary);
+}
+
+/* Content Section - Integrated panel content without floating card effect */
+.content-section {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.content-section.wide {
+    max-width: 1600px;
+    width: 83.33%;
+    /* 10/12 of the available space */
+    margin: 0 auto;
+}
+
+.content-section.full-width {
+    max-width: none;
+}
+
+/* Section block - subtle separation for form groups */
+.section-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-block h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+/* Section title for inline headers */
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
 }
 
 .card-icon {

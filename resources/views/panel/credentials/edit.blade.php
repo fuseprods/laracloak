@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="card" style="max-width: 800px; margin: 0 auto;">
+    <div class="content-section wide">
         <form method="POST" action="{{ route('panel.credentials.update', $credential) }}">
             @csrf
             @method('PUT')
