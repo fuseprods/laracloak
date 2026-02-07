@@ -1,65 +1,65 @@
-# Page Editor - Visual Builder
+# Editor de Páginas - Constructor Visual
 
-The page editor provides a Visual Composer-style drag-and-drop interface for creating and editing pages without writing JSON manually.
+El editor de páginas proporciona una interfaz de arrastrar y soltar estilo "Visual Composer" para crear y editar páginas sin escribir JSON manualmente.
 
-## Overview
+## Descripción General
 
-When creating or editing a page in the panel (`/panel/pages/{id}/edit`), you'll see a visual builder interface instead of a raw JSON textarea. By default, it uses the **Visual Builder**, but you can toggle the **⚙️ Advanced (JSON)** view if needed.
+Al crear o editar una página en el panel (`/panel/pages/{id}/edit`), verás una interfaz de constructor visual en lugar de un área de texto JSON sin formato. Por defecto, utiliza el **Visual Builder**, pero puedes activar la vista **⚙️ Advanced (JSON)** si es necesario.
 
-## Interface Components
+## Componentes de la Interfaz
 
-### 1. Row Management & Structure
-- Click **"➕ Add Row"** to add a new content row.
-- **Visual Structure Picker**: Click the **"📐 Structure"** button on any row to open the selection modal.
-  - **Step 1**: Choose the number of columns (1 to 6).
-  - **Step 2**: Choose a visual layout pattern (e.g., symmetric 50/50, or asymmetric 25/50/25).
-- Rows can be reordered via the **☰ drag-and-drop handles** on the left.
+### 1. Gestión de Filas y Estructura
+- Haz clic en **"➕ Añadir Fila"** para añadir una nueva fila de contenido.
+- **Selector de Estructura Visual**: Haz clic en el botón **"📐 Estructura"** en cualquier fila para abrir el modal de selección.
+  - **Paso 1**: Elige el número de columnas (de 1 a 6).
+  - **Paso 2**: Elige un patrón de diseño visual (ej: simétrico 50/50, o asimétrico 25/50/25).
+- Las filas se pueden reordenar mediante los **asideros de arrastrar y soltar ☰** a la izquierda.
 
-### 2. Widget & Field Selection
-Each column contains a widget selector dropdown. Available widgets depend on page type.
+### 2. Selección de Widgets y Campos
+Cada columna contiene un selector desplegable de widgets. Los widgets disponibles dependen del tipo de página.
 
-**Dashboard Widgets:**
-- `kpi`: Stat cards with trend indicators.
-- `chart`: Interactive charts (Line, Bar, Area, Donut, Pie).
-- `table`: Dynamic data tables with defined columns.
+**Widgets de Dashboard:**
+- `kpi`: Tarjetas de estadísticas con indicadores de tendencia.
+- `chart`: Gráficos interactivos (Línea, Barras, Área, Donut, Tarta).
+- `table`: Tablas de datos dinámicas con columnas definidas.
 - `leaderboard`, `gauge`, `progress-card`, `alert-card`, etc.
-- `info`: Static text cards for supplementary info.
+- `info`: Tarjetas de texto estático para información suplementaria.
 
-**Form Fields:**
-- Forms now support the **same multi-column grid** as dashboards.
-- Available fields: `text`, `textarea`, `select`, `file`, `rating`, `number`, `email`, `date`.
+**Campos de Formulario:**
+- Los formularios ahora soportan la **misma rejilla de varias columnas** que los dashboards.
+- Campos disponibles: `text`, `textarea`, `select`, `file`, `rating`, `number`, `email`, `date`.
 
-### 3. Smart Drag-and-Drop Interaction
-- **Reorder Rows**: Drag the **☰ handle** to move an entire row.
-- **Smart Move Widgets**: 
-    - **Insert & Shift**: Dropping onto an **occupied** slot inserts the widget and shifts others.
-    - **Replace**: Dropping onto an **empty placeholder** replaces that slot, preserving the current column count.
-    - **Reorder**: Same-row moves are intelligently handled to prevent index conflicts.
-    - **Auto-Cleanup**: The source column is always removed, and empty rows are deleted.
-- **Visual Feedback**: Real-time drop indicators and hover states guide your placements.
+### 3. Interacción Inteligente de Arrastrar y Soltar
+- **Reordenar Filas**: Arrastra el **asidero ☰** para mover una fila completa.
+- **Movimiento Inteligente de Widgets**: 
+    - **Insertar y Desplazar**: Soltar sobre un espacio **ocupado** inserta el widget y desplaza los demás.
+    - **Reemplazar**: Soltar sobre un **marcador vacío** reemplaza ese espacio, preservando el número de columnas actual.
+    - **Reordenar**: Los movimientos en la misma fila se gestionan inteligentemente para evitar conflictos de índice.
+    - **Limpieza Automática**: La columna de origen siempre se elimina y las filas vacías se borran.
+- **Feedback Visual**: Indicadores de soltado en tiempo real y estados hover guían tus colocaciones.
 
-### 4. Available Fields Palette
-When you click **"Run Test Call"** in the Destination Configuration:
-- JSON keys from the response appear in the **"📦 Available Fields"** palette.
-- Click any key to auto-fill the "Key" (Dashboard) or "Name" (Form) setting of the **selected widget** (highlighted with a blue border).
+### 4. Paleta de Campos Disponibles
+Cuando haces clic en **"Ejecutar Prueba"** en la Configuración de Destino:
+- Las claves JSON de la respuesta aparecen en la paleta de **"📦 Campos Disponibles"**.
+- Haz clic en cualquier clave para autocompletar la "Clave" (Dashboard) o el "Nombre" (Formulario) del **widget seleccionado** (resaltado con un borde azul).
 
 ---
 
-## Technical Side
+## Lado Técnico
 
-### Layout Persistence
-The layout is stored within the configuration JSON using special markers:
+### Persistencia del Diseño
+El diseño se almacena dentro del JSON de configuración mediante marcadores especiales:
 
-1.  **`break` widgets**: These markers define where a new row starts.
-2.  **`layout` property**: Stored in the `break` widget to define the grid template (e.g., `"layout": "1fr 2fr 1fr"`).
-3.  **`none` type**: Empty slots in the grid are stored as `{ "type": "none" }` to preserve the grid structure upon re-editing.
+1.  **Widgets `break`**: Estos marcadores definen dónde comienza una nueva fila.
+2.  **Propiedad `layout`**: Almacenada en el widget `break` para definir la plantilla de la rejilla (ej: `"layout": "1fr 2fr 1fr"`).
+3.  **Tipo `none`**: Los espacios vacíos en la rejilla se almacenan como `{ "type": "none" }` para preservar la estructura al volver a editar.
 
-### Grid Implementation
-The system uses **CSS Grid** with dynamic variables:
-- `--cols`: Number of equal-width columns.
-- `--layout`: Custom `grid-template-columns` pattern for asymmetric rows.
+### Implementación de la Rejilla
+El sistema utiliza **CSS Grid** con variables dinámicas:
+- `--cols`: Número de columnas de igual ancho.
+- `--layout`: Patrón de `grid-template-columns` personalizado para filas asimétricas.
 
-The `.dashboard-row` class in `panel-base.css` handles this logic:
+La clase `.dashboard-row` en `panel-base.css` gestiona esta lógica:
 ```css
 .dashboard-row {
     display: grid;
@@ -70,16 +70,16 @@ The `.dashboard-row` class in `panel-base.css` handles this logic:
 
 ---
 
-## Example JSON Structure
+## Ejemplo de Estructura JSON
 
 ```json
 {
-  "title": "Customer Overview",
+  "title": "Resumen de Clientes",
   "widgets": [
     { "type": "kpi", "key": "total", "label": "Total" },
-    { "type": "kpi", "key": "active", "label": "Active" },
+    { "type": "kpi", "key": "active", "label": "Activos" },
     { "type": "break", "layout": "1fr 2fr" },
-    { "type": "chart", "key": "history", "label": "Growth", "subtype": "area" },
+    { "type": "chart", "key": "history", "label": "Crecimiento", "subtype": "area" },
     { "type": "none" }
   ]
 }
@@ -87,8 +87,8 @@ The `.dashboard-row` class in `panel-base.css` handles this logic:
 
 ---
 
-## Tips & Best Practices
-- **Multi-column Forms**: Use columns in forms to group related fields (e.g., City and Zip on the same row).
-- **Empty Slots**: You can leave columns empty to create specific alignments; the front-end will skip rendering them but honor the space.
-- **Nested Data**: Use dot notation (e.g., `results[0].meta.value`) for the data keys.
-- **Performance**: Charts and complex widgets are optimized for re-renders within the layout.
+## Consejos y Mejores Prácticas
+- **Formularios Multicolumna**: Usa columnas en los formularios para agrupar campos relacionados (ej: Ciudad y Código Postal en la misma fila).
+- **Espacios Vacíos**: Puedes dejar columnas vacías para crear alineaciones específicas; el front-end omitirá su renderizado pero respetará el espacio.
+- **Datos Anidados**: Usa la notación de punto (ej: `results[0].meta.value`) para las claves de datos.
+- **Rendimiento**: Los gráficos y widgets complejos están optimizados para re-renderizados dentro del diseño.

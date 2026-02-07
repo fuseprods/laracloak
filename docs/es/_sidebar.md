@@ -1,7 +1,3 @@
-- **Language / Idioma**
-  - [🇺🇸 English](/)
-  - [🇪🇸 Español](/es/)
-
 - **Guía de Inicio**
   - [Inicio](README.md)
   - [Pasos Iniciales](getting_started.md)

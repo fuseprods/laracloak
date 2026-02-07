@@ -1,7 +1,3 @@
-- **Language / Idioma**
-  - [🇺🇸 English](/)
-  - [🇪🇸 Español](/es/)
-
 - **Getting Started**
   - [Quick Start](getting_started.md)
   - [Installation & Configuration](configuration.md)

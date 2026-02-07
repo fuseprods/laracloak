@@ -1,49 +1,49 @@
-# Post-Mortem: Dashboard Freeze in Production (2026-02-04)
+# Post-Mortem: Bloqueo de Dashboards en Producción (2026-02-04)
 
-## Summary
-On February 4th, 2026, dashboards in the production environment were reported as "frozen," showing persistent loading spinners instead of rendering widget data. Data was arriving in the browser (visible in DevTools Network tab), but the UI failed to update.
+## Resumen
+El 4 de febrero de 2026, se reportó que los dashboards en el entorno de producción estaban "congelados", mostrando indicadores de carga persistentes en lugar de renderizar los datos de los widgets. Los datos llegaban al navegador (visibles en la pestaña Network de DevTools), pero la interfaz no se actualizaba.
 
-## Symptoms
-- Widgets stuck in "Waiting for data..." state.
-- Browser DevTools showed 200 OK responses with valid JSON payloads.
-- Issue was non-reproducible in the local development environment.
+## Síntomas
+- Los widgets se quedaban bloqueados en el estado "Esperando datos...".
+- Las DevTools del navegador mostraban respuestas 200 OK con cargas JSON válidas.
+- El problema no era reproducible en el entorno de desarrollo local.
 
-## Root Causes
+## Causas Raíz
 
-### 1. Strict Content-Type Validation
-In `front.js`, the code was checking for an exact match of `application/json`.
-- **Local environment**: Headers were clean `application/json`.
-- **Production environment**: The server/proxy appended charset information (e.g., `application/json; charset=UTF-8`), causing the check to fail and the payload to be ignored.
+### 1. Validación Estricta de Content-Type
+En `front.js`, el código verificaba una coincidencia exacta de `application/json`.
+- **Entorno local**: Las cabeceras eran `application/json` limpio.
+- **Entorno de producción**: El servidor/proxy añadía información de charset (ej: `application/json; charset=UTF-8`), lo que causaba que la verificación fallara y la carga fuera ignorada.
 
-### 2. Upstream Data Structure Variances
-The upstream service (n8n) often returns data wrapped in an array `[ { "key": "value" } ]`.
-- **Failure**: The initial `getNestedValue` implementation expected the object at the root. When receiving an array, it failed to find the keys, leaving widgets without data.
+### 2. Variaciones en la Estructura de Datos Upstream
+El servicio upstream (n8n) a menudo devuelve datos envueltos en un array `[ { "clave": "valor" } ]`.
+- **Fallo**: La implementación inicial de `getNestedValue` esperaba el objeto en la raíz. Al recibir un array, fallaba al encontrar las claves, dejando a los widgets sin datos.
 
-### 3. Aggressive Browser Caching
-After initial fixes were deployed, the production environment continued to fail because browsers were serving a cached version of `front.js` from before the fixes.
+### 3. Caché agresiva del Navegador
+Tras desplegar las correcciones iniciales, el entorno de producción seguía fallando porque los navegadores servían una versión cacheada de `front.js` anterior a los arreglos.
 
-### 4. Lack of Error Isolation
-A failure in one widget's rendering logic (or a data mismatch) could potentially stall the entire rendering loop, providing no feedback to the user or developer.
+### 4. Falta de Aislamiento de Errores
+Un fallo en la lógica de renderizado de un solo widget (o un desajuste de datos) podía potencialmente detener todo el bucle de renderizado, sin proporcionar feedback al usuario o desarrollador.
 
-## Resolution
+## Resolución
 
-### Frontend Resilience (`front.js`)
-- **Robust Headers**: Changed `contentType.includes('application/json')` to be case-insensitive and allow for extra parameters.
-- **Intelligent Pathing**: Added logic to automatically unwrap single-element arrays (n8n style) when resolving data keys.
-- **Error Isolation**: Wrapped each widget's render call in a `try/catch` block. If one widget fails, others continue to load.
-- **Debug Logging**: Added console groups and startup logs to provide immediate visibility into the engine's state and received data.
+### Resiliencia del Frontend (`front.js`)
+- **Cabeceras Robustas**: Se cambió `contentType.includes('application/json')` para que sea insensible a mayúsculas y permita parámetros extra.
+- **Pathing Inteligente**: Se añadió lógica para "desenvolver" automáticamente arrays de un solo elemento (estilo n8n) al resolver claves de datos.
+- **Aislamiento de Errores**: Se envolvió cada llamada de renderizado de widget en un bloque `try/catch`. Si un widget falla, los demás continúan cargando.
+- **Logs de Depuración**: Se añadieron grupos de consola y logs de inicio para proporcionar visibilidad inmediata sobre el estado del motor y los datos recibidos.
 
-### Backend Stabilization
-- **Explicit Headers**: Forced the `Content-Type: application/json` header in `FrontController` when returning sanitized payloads.
+### Estabilización del Backend
+- **Cabeceras Explícitas**: Se forzó la cabecera `Content-Type: application/json` en `FrontController` al devolver cargas sanitizadas.
 
-### Cache Busting
-- **Deployment Strategy**: Added a timestamp-based versioning to the script tag in `page.blade.php` to ensure the latest code is always loaded:
+### Busting de Caché
+- **Estrategia de Despliegue**: Se añadió una versión basada en timestamp a la etiqueta script en `page.blade.php` para asegurar que siempre se cargue el código más reciente:
   ```html
   <script src="{{ asset('js/front.js') }}?v={{ time() }}"></script>
   ```
 
-## Lessons Learned
-- Always use `.includes()` and `.toLowerCase()` when checking HTTP headers.
-- Design data parsers to be "forgiving" regarding root arrays vs. objects, especially when proxying third-party services like n8n.
-- Implement cache-busting for critical frontend assets from day one.
-- Provide fallback UI states (like "--") instead of infinite spinners when data resolution fails.
+## Lecciones Aprendidas
+- Usar siempre `.includes()` y `.toLowerCase()` al verificar cabeceras HTTP.
+- Diseñar parsers de datos para ser "indulgentes" con arrays raíz vs. objetos, especialmente al actuar como proxy de servicios de terceros como n8n.
+- Implementar cache-busting para activos críticos de frontend desde el primer día.
+- Proporcionar estados de UI de respaldo (como "--") en lugar de spinners infinitos cuando la resolución de datos falla.

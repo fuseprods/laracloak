@@ -1,48 +1,48 @@
-# Unified Design System
+# Sistema de Diseño Unificado
 
-This document outlines the strategic structure for the application's visual identity, bridging the gap between the Front Office (Guest/Landing) and the Back Office (Panel).
+Este documento describe la estructura estratégica para la identidad visual de la aplicación, cerrando la brecha entre el Front Office (Invitado/Landing) y el Back Office (Panel).
 
-## 1. Design Tokens (CSS Variables)
+## 1. Tokens de Diseño (Variables CSS)
 
-All styles MUST use these variables to ensure theme consistency. Hardcoded hex values are forbidden outside of the `:root` definitions.
+Todos los estilos DEBEN usar estas variables para asegurar la consistencia del tema. Los valores hexadecimales fijos están prohibidos fuera de las definiciones `:root`.
 
-| Category | Token | Description |
+| Categoría | Token | Descripción |
 | :--- | :--- | :--- |
-| **Surfaces** | `--bg-body` | Main background of the application. |
-| | `--bg-card` | Background for cards and elevated panels. |
-| | `--bg-input` | Background for form inputs. |
-| | `--bg-table-header` | Background for table headers. |
-| **Text** | `--text-main` | Primary text color. |
-| | `--text-muted` | Secondary/de-emphasized text color. |
-| | `--text-brand` | Color used for logos and branding. |
-| **Brand** | `--primary` | Main accent color (e.g., Purple). |
-| | `--primary-hover` | Darker/Brighter variant for hover states. |
-| | `--primary-glow` | Subtle shadow/glow color for buttons. |
-| **Feedback** | `--success`, `--danger`, `--warning` | Standard status colors. |
-| **Borders** | `--border` | Default border color. |
-| | `--border-focus` | Border color when an element is focused. |
-| **Effects** | `--glass-blur` | Blur amount for glassmorphic elements (0 for Non-Glass). |
-| | `--shadow-lg` | Standard elevation shadow. |
+| **Superficies** | `--bg-body` | Fondo principal de la aplicación. |
+| | `--bg-card` | Fondo para tarjetas y paneles elevados. |
+| | `--bg-input` | Fondo para entradas de formulario. |
+| | `--bg-table-header` | Fondo para encabezados de tabla. |
+| **Texto** | `--text-main` | Color de texto primario. |
+| | `--text-muted` | Color de texto secundario/atenuado. |
+| | `--text-brand` | Color usado para logos y branding. |
+| **Marca** | `--primary` | Color de acento principal (ej: Púrpura). |
+| | `--primary-hover` | Variante más oscura/brillante para estados hover. |
+| | `--primary-glow` | Color de sombra/resplandor sutil para botones. |
+| **Feedback** | `--success`, `--danger`, `--warning` | Colores de estado estándar. |
+| **Bordes** | `--border` | Color de borde por defecto. |
+| | `--border-focus` | Color de borde cuando un elemento tiene foco. |
+| **Efectos** | `--glass-blur` | Cantidad de desenfoque para elementos glassmórficos. |
+| | `--shadow-lg` | Sombra de elevación estándar. |
 
-## 2. Shared Components
+## 2. Componentes Compartidos
 
-### Surfaces
-- **`.card`**: The base container for content. Supports `.glass-card` variant.
-- **`.stat-card`**: Optimized for dashboard metrics.
+### Superficies
+- **`.card`**: El contenedor base para contenido. Soporta la variante `.glass-card`.
+- **`.stat-card`**: Optimizado para métricas de dashboard.
 
-### Actions
-- **`.btn`**: Base button reset.
-- **`.btn-primary`**: Solid brand color.
-- **`.btn-block`**: Full-width button.
-- **`.btn-link`**: Text only, button behavior.
+### Acciones
+- **`.btn`**: Reset de botón base.
+- **`.btn-primary`**: Color sólido de marca.
+- **`.btn-block`**: Botón de ancho completo.
+- **`.btn-link`**: Solo texto, comportamiento de botón.
 
-### Forms
-- **`.form-control`**: Standard styling for `input`, `select`, and `textarea`.
-- **`.form-label`**: Clean, muted labels.
+### Formularios
+- **`.form-control`**: Estilo estándar para `input`, `select` y `textarea`.
+- **`.form-label`**: Etiquetas limpias y atenuadas.
 
-## 3. Layout Architecture
+## 3. Arquitectura de Layout
 
-We will use a tiered layout system to maximize code reuse:
+Utilizaremos un sistema de layouts escalonado para maximizar la reutilización de código:
 
 ```mermaid
 graph TD
@@ -55,17 +55,17 @@ graph TD
 ```
 
 ### `layouts.base`
-- Master HTML structure.
-- Injects dynamic CSS links based on `AssetController`.
-- Handles `<meta>` tags and CSRF.
-- Includes common scripts (e.g., Tom Select).
+- Estructura HTML maestra.
+- Inyecta enlaces CSS dinámicos basados en `AssetController`.
+- Maneja etiquetas `<meta>` y CSRF.
+- Incluye scripts comunes (ej: Tom Select).
 
 ### `layouts.guest` (Front Office)
-- Extends `base`.
-- Sets `theme-dark` by default (unless user is logged in).
-- Horizontal navigation or minimal header.
+- Extiende `base`.
+- Establece `theme-dark` por defecto (a menos que el usuario esté logueado).
+- Navegación horizontal o encabezado mínimo.
 
 ### `layouts.panel` (Back Office)
-- Extends `base`.
-- Sidebar + Header + Main content structure.
-- User-specific theme from DB.
+- Extiende `base`.
+- Estructura de Sidebar + Header + Contenido principal.
+- Tema específico del usuario desde la DB.

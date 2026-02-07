@@ -12,6 +12,22 @@
         :root {
             --theme-color: #3b82f6;
         }
+
+        .sidebar .app-name-link img {
+            max-width: 64px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .app-name-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: var(--theme-color);
+        }
     </style>
 </head>
 
@@ -27,11 +43,12 @@
             subMaxLevel: 3,
             auto2top: true,
             homepage: 'README.md',
+            relativePath: true,
             alias: {
-                '/es/.*/_sidebar.md': 'es/_sidebar.md',
-                '/es/.*/_navbar.md': 'es/_navbar.md',
-                '/(?!es/).*/_sidebar.md': '_sidebar.md',
-                '/(?!es/).*/_navbar.md': '_navbar.md'
+                '/es/(.*)': 'es/$1',
+                '/es/': 'es/README.md',
+                '/_sidebar.md': '_sidebar.md',
+                '/_navbar.md': '_navbar.md'
             },
             search: 'auto',
             copyCode: {
