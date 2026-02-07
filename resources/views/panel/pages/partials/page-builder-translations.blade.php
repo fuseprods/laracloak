@@ -1,4 +1,3 @@
-<script>
     window.pageBuilderTranslations = {
         "-- Select Widget --": '{{ __("-- Select Widget --") }}',
         "📊 KPI / Stat Card": '{{ __("📊 KPI / Stat Card") }}',
@@ -69,4 +68,3 @@
         "id:ID, name:Name, status:Status": '{{ __("id:ID, name:Name, status:Status") }}',
         "Height (px)": '{{ __("Height (px)") }}'
     };
-</script>
