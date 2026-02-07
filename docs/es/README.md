@@ -1,4 +1,4 @@
-# Documentación de Laracloak 🛡️
+# Documentación de Laracloak
 
 Laracloak es un "Front-Office" seguro para tus automatizaciones. Permite crear interfaces dinámicas (Forms/Dashboards) que interactúan con servicios upstream (como n8n o Make) sin exponer credenciales ni infraestructura.
 
