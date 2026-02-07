@@ -1,5 +1,4 @@
-- **Language / Idioma**
-  - [🇪🇸 Español](#/es/)
+- [Español](#/es/)
 - [Main Site](https://github.com/fuseprods/laracloak)
 - [Quick Start](getting_started.md)
 - [GitHub](https://github.com/fuseprods/laracloak)
