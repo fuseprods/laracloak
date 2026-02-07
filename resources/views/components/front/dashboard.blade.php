@@ -22,10 +22,9 @@
             <!-- Refresh Interval Controls -->
             <div class="flex items-center gap-4 bg-card rounded-md px-3 py-1.5 border border-border shadow-sm">
                 <div class="flex items-center gap-3 border-r border-border pr-3">
-                    <button id="pause-btn"
-                        class="btn btn-ghost btn-sm p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground transition-colors"
+                    <button id="pause-btn" class="btn btn-sm status-playing"
                         title="Pause/Resume Auto-refresh">
-                        <svg id="pause-icon" style="width:20px;height:20px;" fill="none" stroke="currentColor"
+                        <svg id="pause-icon" style="width:20px;height:20px; display:none;" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -41,7 +40,7 @@
                     </button>
 
                     <select id="interval-select"
-                        class="text-sm py-1.5 px-2 border-none bg-transparent focus:ring-0 cursor-pointer font-medium text-muted-foreground hover:text-foreground transition-colors"
+                        class="text-sm border-none bg-transparent focus:ring-0 cursor-pointer font-medium text-muted-foreground hover:text-foreground transition-colors"
                         style="width: auto; min-width: 60px;">
                         <option value="5">5s</option>
                         <option value="10">10s</option>
@@ -60,7 +59,7 @@
             </div>
 
             <!-- Manual Refresh -->
-            <button id="refresh-now-btn" class="btn btn-primary btn-sm shadow-sm px-4 py-2 ml-4" title="Refresh Now">
+            <button id="refresh-now-btn" class="btn btn-primary btn-sm shadow-sm" title="Refresh Now">
                 <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">

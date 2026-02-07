@@ -204,8 +204,30 @@ textarea.form-control {
     transform: none;
 }
 
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    /* Darker red */
+    transform: translateY(-1px);
+}
+
 .btn-block {
     width: 100%;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    height: 36px;
+}
+
+.text-sm {
+    font-size: 0.875rem;
 }
 
 /* Components: Loading Spinner */
@@ -924,4 +946,89 @@ select:focus {
 
 .toast-error {
     border-left: 4px solid var(--danger);
+}
+
+/* Dashboard Refresh Button Styles */
+#pause-btn,
+#refresh-now-btn,
+#interval-select {
+    height: 36px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+#pause-btn {
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 36px;
+    padding: 0 !important;
+}
+
+#refresh-now-btn {
+    padding: 0 1rem !important;
+}
+
+#interval-select {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 36px;
+}
+
+#pause-btn svg {
+    color: white !important;
+}
+
+/* Play Symbol (defaults to green background in playing mode) */
+#pause-btn.status-playing {
+    background-color: #10b981 !important;
+}
+
+#pause-btn.status-playing #play-icon {
+    display: block !important;
+}
+
+#pause-btn.status-playing #pause-icon {
+    display: none !important;
+}
+
+/* Playing + Hover: Show Pause Symbol in Yellow Background */
+#pause-btn.status-playing:hover {
+    background-color: #f59e0b !important;
+}
+
+#pause-btn.status-playing:hover #play-icon {
+    display: none !important;
+}
+
+#pause-btn.status-playing:hover #pause-icon {
+    display: block !important;
+}
+
+/* Paused Mode: Show Pause Symbol in Yellow background by default */
+#pause-btn.status-paused {
+    background-color: #f59e0b !important;
+}
+
+#pause-btn.status-paused #pause-icon {
+    display: block !important;
+}
+
+#pause-btn.status-paused #play-icon {
+    display: none !important;
+}
+
+/* Paused + Hover: Show Play Symbol in Green background */
+#pause-btn.status-paused:hover {
+    background-color: #10b981 !important;
+}
+
+#pause-btn.status-paused:hover #pause-icon {
+    display: none !important;
+}
+
+#pause-btn.status-paused:hover #play-icon {
+    display: block !important;
 }

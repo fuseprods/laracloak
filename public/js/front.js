@@ -542,6 +542,12 @@ class DashboardHandler {
 
         if (this.intervalSelect) this.intervalSelect.value = this.interval;
 
+        // Set initial UI state
+        if (this.interval === 0) {
+            this.isPaused = true;
+        }
+        this.setPausedUI(this.isPaused);
+
         // Last Fetch Time
         this.lastFetch = Date.now();
         this.uiTimer = null;
@@ -664,16 +670,14 @@ class DashboardHandler {
     }
 
     setPausedUI(isPaused) {
-        if (!this.playIcon || !this.pauseIcon) return;
+        if (!this.pauseBtn) return;
 
         if (isPaused) {
-            this.playIcon.style.display = 'block';
-            this.pauseIcon.style.display = 'none';
-            this.pauseBtn.classList.add('text-warning');
+            this.pauseBtn.classList.remove('status-playing');
+            this.pauseBtn.classList.add('status-paused');
         } else {
-            this.playIcon.style.display = 'none';
-            this.pauseIcon.style.display = 'block';
-            this.pauseBtn.classList.remove('text-warning');
+            this.pauseBtn.classList.remove('status-paused');
+            this.pauseBtn.classList.add('status-playing');
         }
     }
 
