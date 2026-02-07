@@ -1,15 +1,21 @@
-- [English](README.md)
-- [Español](es/README.md)
-- [Getting Started](getting_started.md)
-- [Installation & Configuration](configuration.md)
-- [Design System](design_system.md)
-- [Core Concepts]
+- **Language / Idioma**
+  - [🇺🇸 English](README.md)
+  - [🇪🇸 Español](es/README.md)
+
+- **Getting Started**
+  - [Quick Start](getting_started.md)
+  - [Installation & Configuration](configuration.md)
+  - [Design System](design_system.md)
+
+- **Core Concepts**
   - [Upstream Proxy](upstream_proxy.md)
   - [User Roles & Permissions](user_roles.md)
-- [Feature Guides]
+
+- **Feature Guides**
   - [Visual Page Editor](page_editor.md)
   - [Dashboards](dashboards.md)
   - [Dynamic Forms](forms.md)
   - [Creating Pages](creating_pages.md)
-- [Maintenance]
+
+- **Maintenance**
   - [Post-Mortem 2026-02-04](post-mortem_2026-02-04.md)
