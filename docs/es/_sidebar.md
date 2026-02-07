@@ -1,4 +1,4 @@
-- [English](/)
+- [English](../README.md)
 - [Inicio](README.md)
 - [Guía de Inicio](getting_started.md)
 - [Configuración](configuration.md)
