@@ -20,18 +20,18 @@
     <script>
         window.$docsify = {
             name: 'LaraCloak',
+            logo: 'img/logo.png',
             repo: 'https://github.com/fuseprods/laracloak',
             loadSidebar: true,
             loadNavbar: true,
             subMaxLevel: 3,
             auto2top: true,
             homepage: 'README.md',
-            relativePath: true,
             alias: {
-                '/es/.*/_sidebar.md': '/es/_sidebar.md',
-                '/es/.*/_navbar.md': '/es/_navbar.md',
-                '/(.*)/_sidebar.md': '/_sidebar.md',
-                '/(.*)/_navbar.md': '/_navbar.md'
+                '/es/.*/_sidebar.md': 'es/_sidebar.md',
+                '/es/.*/_navbar.md': 'es/_navbar.md',
+                '/(?!es/).*/_sidebar.md': '_sidebar.md',
+                '/(?!es/).*/_navbar.md': '_navbar.md'
             },
             search: 'auto',
             copyCode: {
