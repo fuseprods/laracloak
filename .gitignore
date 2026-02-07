@@ -32,6 +32,3 @@ _ide_helper_models.php
 # Internal Docs / Notes
 agent_command_fix.md
 packing.md
-/docs/post-mortems/
-/docs/*.md
-!/docs/README.md
