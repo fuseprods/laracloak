@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Page;
 use App\Services\UpstreamService;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class FrontController extends Controller
 {
@@ -75,8 +76,18 @@ class FrontController extends Controller
             return $resp;
 
         } catch (\Exception $e) {
-            // Return JSON error even if expected binary, to allow frontend handling
-            return response()->json(['error' => $e->getMessage(), 'code' => '503'], 503);
+            Log::warning('Front proxy request failed', [
+                'page_id' => $page->id,
+                'slug' => $page->slug,
+                'status' => 503,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Never expose internal upstream/debug details to front users.
+            return response()->json([
+                'error' => __('Service temporarily unavailable.'),
+                'code' => '503',
+            ], 503);
         }
     }
 

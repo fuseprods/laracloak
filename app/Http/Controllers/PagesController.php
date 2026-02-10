@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Permission;
+use Illuminate\Support\Str;
 
 class PagesController extends Controller
 {
@@ -222,6 +223,15 @@ class PagesController extends Controller
         $filters = array_filter(array_map('trim', explode(',', $request->response_filters ?? '')));
         $credential = $request->credential_id ? \App\Models\Credential::find($request->credential_id) : null;
 
+        if ($credential && !$credential->isDomainAllowed($validated['destination_url'])) {
+            return response()->json([
+                'ok' => false,
+                'message' => $this->sanitizeDebugMessage(
+                    __("The URL domain is not allowed by the selected credential ':name'.", ['name' => $credential->name])
+                ),
+            ], 422);
+        }
+
         try {
             $upstream = app(UpstreamService::class);
             $response = $upstream->call($validated['destination_url'], $validated['upstream_method'], [], $credential);
@@ -234,24 +244,43 @@ class PagesController extends Controller
                 if (json_last_error() === JSON_ERROR_NONE) {
                     $json = $this->applyFilters($json, $filters);
                     return response()->json([
+                        'ok' => true,
+                        'message' => __('Connection successful.'),
                         'status' => $response->status(),
-                        'contentType' => $contentType,
-                        'data' => $json,
-                        'formatted' => json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                        'content_type' => $contentType,
+                        'payload' => $json,
                     ]);
                 }
             }
 
             return response()->json([
+                'ok' => true,
+                'message' => __('Connection successful, but the response is not JSON.'),
                 'status' => $response->status(),
-                'contentType' => $contentType,
-                'data' => $body,
-                'formatted' => $body
+                'content_type' => $contentType,
+                'payload' => null,
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json([
+                'ok' => false,
+                'message' => $this->sanitizeDebugMessage($e->getMessage()),
+            ], 422);
         }
+    }
+
+    private function sanitizeDebugMessage(string $message): string
+    {
+        $sanitized = strip_tags($message);
+        $sanitized = preg_replace('/[\r\n\t]+/', ' ', $sanitized) ?? '';
+        $sanitized = preg_replace('/\s{2,}/', ' ', $sanitized) ?? '';
+        $sanitized = trim($sanitized);
+
+        if ($sanitized === '') {
+            return __('Connection test failed.');
+        }
+
+        return Str::limit($sanitized, 240);
     }
 
     private function applyFilters(array $data, array $customFilters): array

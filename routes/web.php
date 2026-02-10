@@ -36,6 +36,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->prefix('panel')->name('panel.')->group(function () {
     Route::get('/', [PanelController::class, 'index'])->name('index');
 
+    Route::prefix('assets')->name('assets.')->group(function () {
+        Route::get('/page-builder.css', [AssetController::class, 'pageBuilderCss'])->name('page-builder.css');
+        Route::get('/page-builder.js', [AssetController::class, 'pageBuilderJs'])->name('page-builder.js');
+    });
+
     // Admin-only Management
     Route::middleware(['admin'])->group(function () {
         // User Management

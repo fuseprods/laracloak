@@ -5,7 +5,7 @@
 console.log('🚀 Laracloak Frontend Engine Loaded');
 
 class Api {
-    static async post(url, data) {
+    static async post(url, data, requestOptions = {}) {
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         const options = {
@@ -14,6 +14,10 @@ class Api {
                 'X-CSRF-TOKEN': token,
             }
         };
+
+        if (requestOptions.signal) {
+            options.signal = requestOptions.signal;
+        }
 
         if (data instanceof FormData) {
             options.body = data;
@@ -525,6 +529,8 @@ class DashboardHandler {
         // Timer state
         this.timer = null;
         this.isPaused = false;
+        this.isFetching = false;
+        this.activeFetchController = null;
 
         // Load preference or default
         // User requested: Always default to the server-provided value on load, ignoring previous session storage.
@@ -572,7 +578,7 @@ class DashboardHandler {
     bindEvents() {
         if (this.refreshBtn) {
             this.refreshBtn.addEventListener('click', () => {
-                this.fetchData();
+                this.fetchData({ allowWhenPaused: true });
                 this.resetTimer();
             });
         }
@@ -588,9 +594,12 @@ class DashboardHandler {
                 this.updateTimeLabel(); // Update immediately on change
 
                 if (this.interval === 0) {
+                    this.isPaused = true;
                     this.stopTimer();
+                    this.abortActiveFetch();
                     this.setPausedUI(true);
                 } else {
+                    this.isPaused = false;
                     this.startTimer();
                     this.setPausedUI(false);
                 }
@@ -599,7 +608,7 @@ class DashboardHandler {
     }
 
     async init() {
-        await this.fetchData();
+        await this.fetchData({ allowWhenPaused: true });
         this.startTimer();
         this.startUITimer();
     }
@@ -663,8 +672,9 @@ class DashboardHandler {
 
         if (this.isPaused) {
             this.stopTimer();
+            this.abortActiveFetch();
         } else {
-            this.fetchData();
+            this.fetchData({ allowWhenPaused: true });
             this.startTimer();
         }
     }
@@ -681,7 +691,28 @@ class DashboardHandler {
         }
     }
 
-    async fetchData() {
+    abortActiveFetch() {
+        if (this.activeFetchController) {
+            this.activeFetchController.abort();
+            this.activeFetchController = null;
+        }
+    }
+
+    async fetchData(options = {}) {
+        const { allowWhenPaused = false } = options;
+
+        if (this.isPaused && !allowWhenPaused) {
+            return;
+        }
+
+        if (this.isFetching) {
+            return;
+        }
+
+        const controller = new AbortController();
+        this.activeFetchController = controller;
+        this.isFetching = true;
+
         try {
             const btn = this.refreshBtn;
             if (btn) btn.classList.add('animate-spin');
@@ -689,7 +720,7 @@ class DashboardHandler {
             this.lastFetch = Date.now(); // Track time
             this.updateTimeLabel();
 
-            const response = await Api.post(`/front/${this.slug}/action`, {});
+            const response = await Api.post(`/front/${this.slug}/action`, {}, { signal: controller.signal });
 
             console.group(`Dashboard Data Received [${new Date().toLocaleTimeString()}]`);
             console.log('Payload:', response.payload);
@@ -701,8 +732,16 @@ class DashboardHandler {
             }
             console.groupEnd();
         } catch (err) {
+            if (err.name === 'AbortError') {
+                console.debug('Dashboard fetch aborted');
+                return;
+            }
             console.error('Dashboard Fetch Error:', err);
         } finally {
+            if (this.activeFetchController === controller) {
+                this.activeFetchController = null;
+            }
+            this.isFetching = false;
             if (this.refreshBtn) this.refreshBtn.classList.remove('animate-spin');
         }
     }

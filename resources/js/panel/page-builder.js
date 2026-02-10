@@ -15,6 +15,9 @@ class PageBuilder {
 
         this.rows = [];
         this.availableFields = [];
+        this.availablePayload = null;
+        this.activePaletteTab = 'schema';
+        this.expandedSchemaPaths = new Set();
         this.selectedWidget = null;
 
         this.widgetTypes = this.pageType === 'dashboard'
@@ -92,10 +95,17 @@ class PageBuilder {
                 
                 <div class="pb-palette" id="pb-palette" style="display: none;">
                     <div class="pb-palette-header">
-                        <span>📦 ${this.__('Available Fields')}</span>
-                        <span class="pb-palette-hint">${this.__('Click a field to use it in the selected widget')}</span>
+                        <span>📦 ${this.__('Available Input')}</span>
+                        <span class="pb-palette-hint">${this.__('Drag a field to a widget or click to assign it')}</span>
                     </div>
-                    <div class="pb-palette-fields" id="pb-palette-fields"></div>
+                    <div class="pb-palette-tabs" id="pb-palette-tabs">
+                        <button type="button" class="pb-palette-tab active" data-tab="schema">${this.__('Schema')}</button>
+                        <button type="button" class="pb-palette-tab" data-tab="json">${this.__('JSON')}</button>
+                    </div>
+                    <div class="pb-palette-content">
+                        <div class="pb-palette-view active" id="pb-palette-schema"></div>
+                        <div class="pb-palette-view" id="pb-palette-json"></div>
+                    </div>
                 </div>
                 
                 <div class="pb-rows" id="pb-rows"></div>
@@ -139,10 +149,25 @@ class PageBuilder {
                 this.deleteWidget(rowId, colIndex);
             }
 
+            // Palette tab switch
+            if (target.closest('.pb-palette-tab')) {
+                const tab = target.closest('.pb-palette-tab').dataset.tab;
+                this.switchPaletteTab(tab);
+                return;
+            }
+
+            // Schema node toggle
+            if (target.closest('.pb-schema-toggle')) {
+                const path = target.closest('.pb-schema-toggle').dataset.path;
+                this.toggleSchemaPath(path);
+                return;
+            }
+
             // Palette field click
-            if (target.closest('.pb-palette-field')) {
-                const field = target.closest('.pb-palette-field').dataset.field;
+            if (target.closest('.pb-field-item')) {
+                const field = target.closest('.pb-field-item').dataset.field;
                 this.applyFieldToSelectedWidget(field);
+                return;
             }
 
             // Widget selection for palette
@@ -198,10 +223,21 @@ class PageBuilder {
 
         // ===== DRAG AND DROP FOR ROWS =====
         this.container.addEventListener('dragstart', (e) => {
+            const fieldEl = e.target.closest('.pb-field-item');
             const rowHandle = e.target.closest('.pb-row-handle');
             const widgetEl = e.target.closest('.pb-widget');
 
-            if (rowHandle) {
+            if (fieldEl) {
+                const field = fieldEl.dataset.field;
+                if (!field) return;
+
+                fieldEl.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'copyMove';
+                e.dataTransfer.setData('text/plain', JSON.stringify({
+                    type: 'field',
+                    field: field
+                }));
+            } else if (rowHandle) {
                 const rowEl = rowHandle.closest('.pb-row');
                 rowEl.classList.add('dragging');
                 e.dataTransfer.effectAllowed = 'move';
@@ -278,6 +314,8 @@ class PageBuilder {
                 this.handleRowDrop(data, e);
             } else if (data.type === 'widget') {
                 this.handleWidgetDrop(data, e);
+            } else if (data.type === 'field') {
+                this.handleFieldDrop(data, e);
             }
 
             // Clean up
@@ -381,6 +419,18 @@ class PageBuilder {
 
         this.renderRows();
         this.syncConfig();
+    }
+
+    handleFieldDrop(data, e) {
+        const targetWidgetEl = e.target.closest('.pb-widget');
+        if (!targetWidgetEl) return;
+
+        const field = data.field;
+        if (!field) return;
+
+        const rowId = targetWidgetEl.closest('.pb-row').dataset.rowId;
+        const colIndex = parseInt(targetWidgetEl.dataset.colIndex);
+        this.applyFieldToWidget(rowId, colIndex, field);
     }
 
     loadConfig(config) {
@@ -507,10 +557,14 @@ class PageBuilder {
             return;
         }
 
-        const row = this.rows.find(r => r.id === this.selectedWidget.rowId);
+        this.applyFieldToWidget(this.selectedWidget.rowId, this.selectedWidget.colIndex, field);
+    }
+
+    applyFieldToWidget(rowId, colIndex, field) {
+        const row = this.rows.find(r => r.id === rowId);
         if (!row) return;
 
-        const widget = row.widgets[this.selectedWidget.colIndex];
+        const widget = row.widgets[colIndex];
         if (!widget) return;
 
         // Apply to key (dashboard) or name (form)
@@ -525,25 +579,323 @@ class PageBuilder {
     }
 
     setAvailableFields(fields) {
-        this.availableFields = fields;
+        this.availableFields = Array.isArray(fields) ? fields : [];
+        this.availablePayload = null;
+        this.expandedSchemaPaths.clear();
+        this.renderPalette();
+    }
+
+    setAvailableInput(payload) {
+        this.availablePayload = payload ?? null;
+        this.availableFields = extractFieldKeys(this.availablePayload ?? {});
+        this.expandedSchemaPaths.clear();
+        this.activePaletteTab = 'schema';
         this.renderPalette();
     }
 
     renderPalette() {
         const palette = this.container.querySelector('#pb-palette');
-        const fieldsContainer = this.container.querySelector('#pb-palette-fields');
+        const hasFields = this.availableFields.length > 0;
+        const hasPayload = this.availablePayload !== null;
 
-        if (this.availableFields.length === 0) {
+        if (!hasFields && !hasPayload) {
             palette.style.display = 'none';
             return;
         }
 
         palette.style.display = 'block';
-        fieldsContainer.innerHTML = this.availableFields.map(field => `
-            <button type="button" class="pb-palette-field" data-field="${field}">
-                ${field}
+        this.renderPaletteViews();
+        this.switchPaletteTab(this.activePaletteTab);
+    }
+
+    renderPaletteViews() {
+        const schemaContainer = this.container.querySelector('#pb-palette-schema');
+        const jsonContainer = this.container.querySelector('#pb-palette-json');
+
+        if (!schemaContainer || !jsonContainer) return;
+
+        schemaContainer.innerHTML = this.renderSchemaView();
+        jsonContainer.innerHTML = this.renderJsonView();
+    }
+
+    switchPaletteTab(tab) {
+        const validTab = tab === 'json' ? 'json' : 'schema';
+        this.activePaletteTab = validTab;
+
+        this.container.querySelectorAll('.pb-palette-tab').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.tab === validTab);
+        });
+
+        this.container.querySelectorAll('.pb-palette-view').forEach((view) => {
+            view.classList.toggle('active', view.id === `pb-palette-${validTab}`);
+        });
+    }
+
+    toggleSchemaPath(path) {
+        if (!path) return;
+
+        if (this.expandedSchemaPaths.has(path)) {
+            this.expandedSchemaPaths.delete(path);
+        } else {
+            this.expandedSchemaPaths.add(path);
+        }
+
+        this.renderPaletteViews();
+        this.switchPaletteTab('schema');
+    }
+
+    renderSchemaView() {
+        if (this.availablePayload === null) {
+            if (this.availableFields.length === 0) {
+                return `<div class="pb-empty-note">${this.__('No fields detected yet')}</div>`;
+            }
+
+            return `
+                <div class="pb-schema-flat">
+                    ${this.availableFields.map((field) => this.renderFieldChip(field, 'flat', field, '', { mode: 'flat' })).join('')}
+                </div>
+            `;
+        }
+
+        const nodes = this.buildRootSchemaNodes(this.availablePayload);
+        if (nodes.length === 0) {
+            return `<div class="pb-empty-note">${this.__('No mappable keys found in input')}</div>`;
+        }
+
+        const itemLabel = nodes.length === 1 ? this.__('item') : this.__('items');
+
+        return `
+            <div class="pb-schema-count">${nodes.length} ${this.escapeHtml(itemLabel)}</div>
+            <div class="pb-schema-tree">
+                ${nodes.map((node) => this.renderSchemaNode(node)).join('')}
+            </div>
+        `;
+    }
+
+    renderSchemaNode(node, depth = 0) {
+        const isExpandable = node.children.length > 0;
+        const isExpanded = this.expandedSchemaPaths.has(node.path);
+        const isNodeStyle = isExpandable || node.type === 'object' || node.type === 'array';
+
+        return `
+            <div class="pb-schema-node">
+                <div class="pb-schema-row" data-depth="${depth}" style="--pb-depth: ${depth};">
+                    ${isExpandable ? `
+                        <button type="button" class="pb-schema-toggle ${isExpanded ? 'is-expanded' : ''}" data-path="${this.escapeAttribute(node.path)}" title="${this.__('Expand/Collapse')}">
+                            <span class="pb-schema-toggle-icon" aria-hidden="true">
+                                <svg viewBox="0 0 12 12" focusable="false" aria-hidden="true">
+                                    <path d="M4 2.5L8 6L4 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    ` : '<span class="pb-schema-toggle-spacer"></span>'}
+                    ${this.renderFieldChip(node.path, node.type, node.label, node.preview, { isNode: isNodeStyle })}
+                </div>
+                ${isExpandable && isExpanded ? `
+                    <div class="pb-schema-children">
+                        ${node.children.map((child) => this.renderSchemaNode(child, depth + 1)).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+    renderFieldChip(path, type = 'flat', label = null, preview = '', options = {}) {
+        const resolvedLabel = label ?? path;
+        const mode = options.mode || (options.isNode ? 'node' : (type === 'flat' ? 'flat' : 'leaf'));
+
+        if (mode === 'node') {
+            const metaText = this.getSchemaMetaText(type, preview);
+            return `
+                <button type="button"
+                    class="pb-field-item pb-field-item-node"
+                    draggable="true"
+                    data-field="${this.escapeAttribute(path)}"
+                    title="${this.escapeAttribute(path)}">
+                    <span class="pb-field-node-icon">${this.escapeHtml(this.getNodeIcon(type))}</span>
+                    <span class="pb-field-label">${this.escapeHtml(resolvedLabel)}</span>
+                    ${metaText ? `<span class="pb-field-meta">${this.escapeHtml(metaText)}</span>` : ''}
+                </button>
+            `;
+        }
+
+        if (mode === 'flat') {
+            return `
+                <button type="button"
+                    class="pb-field-item pb-field-item-flat"
+                    draggable="true"
+                    data-field="${this.escapeAttribute(path)}"
+                    title="${this.escapeAttribute(path)}">
+                    <span class="pb-field-label">${this.escapeHtml(resolvedLabel)}</span>
+                </button>
+            `;
+        }
+
+        const valueText = this.getLeafValueText(type, preview);
+        const typeToken = this.getTypeToken(type);
+
+        return `
+            <button type="button"
+                class="pb-field-item pb-field-item-leaf"
+                draggable="true"
+                data-field="${this.escapeAttribute(path)}"
+                title="${this.escapeAttribute(path)}">
+                <span class="pb-field-type">${this.escapeHtml(typeToken)}</span>
+                <span class="pb-field-label">${this.escapeHtml(resolvedLabel)}</span>
+                ${valueText ? `<span class="pb-field-value">${this.escapeHtml(valueText)}</span>` : ''}
             </button>
-        `).join('');
+        `;
+    }
+
+    renderJsonView() {
+        if (this.availablePayload === null) {
+            return `<div class="pb-empty-note">${this.__('No JSON payload available')}</div>`;
+        }
+
+        let prettyJson;
+        try {
+            prettyJson = JSON.stringify(this.availablePayload, null, 2);
+        } catch (e) {
+            prettyJson = String(this.availablePayload);
+        }
+
+        return `<pre class="pb-json-view">${this.syntaxHighlight(prettyJson)}</pre>`;
+    }
+
+    syntaxHighlight(json) {
+        const escaped = this.escapeHtml(json);
+        return escaped.replace(
+            /("(?:\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*")(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?/g,
+            (match, stringToken, keyToken, boolNullToken) => {
+                if (keyToken) return `<span class="pb-json-key">${stringToken}</span>:`;
+                if (stringToken) return `<span class="pb-json-string">${stringToken}</span>`;
+                if (boolNullToken) {
+                    if (boolNullToken === 'null') return `<span class="pb-json-null">${boolNullToken}</span>`;
+                    return `<span class="pb-json-boolean">${boolNullToken}</span>`;
+                }
+                return `<span class="pb-json-number">${match}</span>`;
+            }
+        );
+    }
+
+    buildRootSchemaNodes(payload) {
+        let root = payload;
+
+        if (Array.isArray(root)) {
+            if (root.length === 0) return [];
+
+            const first = root[0];
+            if (first && typeof first === 'object') {
+                root = first;
+            } else {
+                return [this.buildSchemaNode('[0]', first, '0', true)];
+            }
+        }
+
+        if (root && typeof root === 'object') {
+            return Object.entries(root).map(([key, value]) => this.buildSchemaNode(key, value, key, true));
+        }
+
+        return [this.buildSchemaNode('$value', root, '$value', true)];
+    }
+
+    buildSchemaNode(label, value, path, includeChildren = true) {
+        const type = this.getValueType(value);
+        const preview = this.getValuePreview(value, type);
+        const children = includeChildren ? this.buildChildren(value, path) : [];
+
+        return {
+            label,
+            path,
+            type,
+            preview,
+            children,
+        };
+    }
+
+    buildChildren(value, parentPath) {
+        if (Array.isArray(value)) {
+            if (value.length === 0) return [];
+
+            const first = value[0];
+            if (first && typeof first === 'object') {
+                return Object.entries(first).map(([key, child]) =>
+                    this.buildSchemaNode(key, child, `${parentPath}.0.${key}`, true)
+                );
+            }
+
+            return [this.buildSchemaNode('[0]', first, `${parentPath}.0`, true)];
+        }
+
+        if (value && typeof value === 'object') {
+            return Object.entries(value).map(([key, child]) =>
+                this.buildSchemaNode(key, child, `${parentPath}.${key}`, true)
+            );
+        }
+
+        return [];
+    }
+
+    getValueType(value) {
+        if (Array.isArray(value)) return 'array';
+        if (value === null) return 'null';
+        if (typeof value === 'object') return 'object';
+        return typeof value;
+    }
+
+    getValuePreview(value, type) {
+        if (type === 'object') return '';
+        if (type === 'array') return `(${value.length})`;
+        if (type === 'string') return value.length > 80 ? `${value.slice(0, 80)}...` : `${value}`;
+        if (type === 'null') return '';
+        return String(value);
+    }
+
+    getSchemaMetaText(type, preview) {
+        if (type === 'object') return 'object';
+        if (type === 'array') return preview ? `array${preview}` : 'array';
+        return type;
+    }
+
+    getLeafValueText(type, preview) {
+        if (type === 'null') return 'null';
+        if (type === 'boolean') return preview || 'false';
+        if (type === 'number') return preview || '0';
+        if (type === 'string') return preview || '';
+        return preview || '';
+    }
+
+    getNodeIcon(type) {
+        const map = {
+            object: '🧊',
+            array: '🧊',
+        };
+
+        return map[type] || '🧊';
+    }
+
+    getTypeToken(type) {
+        const map = {
+            string: 'T',
+            number: '#',
+            boolean: '?',
+            null: '0',
+            object: '{}',
+            array: '[]',
+            flat: 'K',
+        };
+
+        return map[type] || 'T';
+    }
+
+    escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    escapeAttribute(value) {
+        return this.escapeHtml(value).replace(/"/g, '&quot;');
     }
 
     renderRows() {

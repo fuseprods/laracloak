@@ -148,21 +148,30 @@
                         loader.style.display = 'none';
                         results.style.display = 'block';
 
-                        if (response.ok) {
-                            status.textContent = `HTTP ${result.status}`;
+                        if (response.ok && result.ok) {
+                            status.textContent = 'OK';
                             status.style.color = '#10b981';
-                            output.textContent = result.formatted;
+                            output.textContent = `${result.message || 'Connection successful.'} (HTTP ${result.status})`;
+                            if (window.pageBuilder && typeof window.pageBuilder.setAvailableInput === 'function') {
+                                window.pageBuilder.setAvailableInput(result.payload ?? null);
+                            }
                         } else {
                             status.textContent = 'ERROR';
                             status.style.color = '#ef4444';
-                            output.textContent = result.error || 'Unknown error';
+                            output.textContent = result.message || 'Connection failed.';
+                            if (window.pageBuilder && typeof window.pageBuilder.setAvailableInput === 'function') {
+                                window.pageBuilder.setAvailableInput(null);
+                            }
                         }
                     } catch (e) {
                         loader.style.display = 'none';
                         results.style.display = 'block';
                         status.textContent = 'EXCEPTION';
                         status.style.color = '#ef4444';
-                        output.textContent = e.message;
+                        output.textContent = '{{ __("Connection test failed.") }}';
+                        if (window.pageBuilder && typeof window.pageBuilder.setAvailableInput === 'function') {
+                            window.pageBuilder.setAvailableInput(null);
+                        }
                     } finally {
                         btn.disabled = false;
                     }
@@ -190,8 +199,8 @@
                 </div>
             </div>
 
-            <link rel="stylesheet" href="{{ asset('css/page-builder.css') }}">
-            <script src="{{ asset('js/page-builder.js') }}"></script>
+            <link rel="stylesheet" href="{{ route('panel.assets.page-builder.css') }}?v={{ time() }}">
+            <script src="{{ route('panel.assets.page-builder.js') }}?v={{ time() }}"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const container = document.getElementById('visual-builder-container');
@@ -221,23 +230,6 @@
                     });
 
                     window.pageBuilder = builder;
-
-                    // Update test call to populate available fields
-                    const originalClick = document.getElementById('btn-test-upstream').onclick;
-                    document.getElementById('btn-test-upstream').addEventListener('click', function () {
-                        setTimeout(function () {
-                            const output = document.getElementById('test-output');
-                            if (output.textContent && window.pageBuilder) {
-                                try {
-                                    const data = JSON.parse(output.textContent);
-                                    if (typeof extractFieldKeys === 'function') {
-                                        const fields = extractFieldKeys(data);
-                                        window.pageBuilder.setAvailableFields(fields);
-                                    }
-                                } catch (e) { }
-                            }
-                        }, 2000);
-                    });
 
                     toggleBtn.addEventListener('click', function () {
                         isJsonMode = !isJsonMode;

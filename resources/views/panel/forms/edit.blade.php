@@ -107,8 +107,8 @@
                 </div>
             </div>
 
-            <link rel="stylesheet" href="{{ asset('css/page-builder.css') }}">
-            <script src="{{ asset('js/page-builder.js') }}"></script>
+            <link rel="stylesheet" href="{{ route('panel.assets.page-builder.css') }}?v={{ time() }}">
+            <script src="{{ route('panel.assets.page-builder.js') }}?v={{ time() }}"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const container = document.getElementById('visual-builder-container');

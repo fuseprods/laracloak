@@ -55,4 +55,36 @@ class AssetController extends Controller
             ->header('Content-Type', 'application/javascript')
             ->header('Cache-Control', 'public, max-age=3600');
     }
+
+    /**
+     * Serve page builder CSS (private panel area).
+     */
+    public function pageBuilderCss()
+    {
+        $path = resource_path('css/panel/page-builder.css');
+
+        if (!File::exists($path)) {
+            abort(404);
+        }
+
+        return response(File::get($path), 200)
+            ->header('Content-Type', 'text/css')
+            ->header('Cache-Control', 'private, max-age=600');
+    }
+
+    /**
+     * Serve page builder JS (private panel area).
+     */
+    public function pageBuilderJs()
+    {
+        $path = resource_path('js/panel/page-builder.js');
+
+        if (!File::exists($path)) {
+            abort(404);
+        }
+
+        return response(File::get($path), 200)
+            ->header('Content-Type', 'application/javascript')
+            ->header('Cache-Control', 'private, max-age=600');
+    }
 }
