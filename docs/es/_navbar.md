@@ -1,4 +1,0 @@
-- [English](/)
-- [Sito Principal](https://github.com/fuseprods/laracloak)
-- [Inicio Rápido](getting_started.md)
-- [GitHub](https://github.com/fuseprods/laracloak)

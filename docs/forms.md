@@ -95,6 +95,6 @@ When clicking "Reserve my spot", Laracloak:
 3.  Makes a POST to the **Destination URL**.
 4.  If the upstream responds with 200 OK, it shows the **Success Message** and redirects if there is a **Redirect URL**.
 
-![Placeholder: Screenshot of the visual form builder](img/form_builder.png)
+![Placeholder: Screenshot of the visual form builder](/img/form_builder.png)
 
-![Placeholder: Screenshot of the final rendered form on the front-end](img/form_frontend.png)
+![Placeholder: Screenshot of the final rendered form on the front-end](/img/form_frontend.png)

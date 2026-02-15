@@ -16,7 +16,7 @@ Diseñados para la **entrada de datos** (Upstream -> User).
 *   **Propiedades clave**: Tasa de refresco automática (Auto-refresh).
 *   **Método habitual**: `GET`.
 
-![Placeholder: Captura de pantalla del formulario de creación de página](img/page_creation_form.png)
+![Placeholder: Captura de pantalla del formulario de creación de página](/img/page_creation_form.png)
 
 ## 🛠️ Conceptos Compartidos
 

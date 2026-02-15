@@ -26,7 +26,7 @@ Las credenciales están protegidas por:
 -   **Cifrado AES-256**: Los valores de los tokens se guardan cifrados en la base de datos.
 -   **Restricción de Dominios**: Puedes limitar una credencial para que solo funcione con ciertos dominios (ej: `*.n8n.cloud`).
 
-![Placeholder: Captura de pantalla de la gestión de Credenciales](img/credentials_management.png)
+![Placeholder: Captura de pantalla de la gestión de Credenciales](/img/credentials_management.png)
 
 ## 🎛️ Configuración de Destino (Destination URL)
 

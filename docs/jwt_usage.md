@@ -1,41 +1,34 @@
-# Uso de Credenciales JWT
+# JWT Credential Usage
 
-Laracloak permite la autenticación mediante JWT (JSON Web Token) de dos formas:
-1. **Estático**: Proporcionando un token ya generado.
-2. **Generación Dinámica**: Generando un token firmado en cada petición.
+Laracloak allows authentication via JWT (JSON Web Token) in two ways:
+1. **HMAC (Shared Secret)**: Basic signing using a shared secret key.
+2. **PEM (RSA/EC)**: Asymmetric signing using a Private Key.
 
-## Configuración para Generación Dinámica
+## Configuration via UI
 
-Para configurar una credencial que genere JWTs dinámicamente, debes establecer los siguientes valores en la base de datos (o formulario de creación):
+The credential creation/edit form now provides a user-friendly interface to configure dynamic JWT generation. You no longer need to edit JSON manually.
 
-- **Type**: `jwt`
-- **Auth Key**: (Opcional) Puede usarse como identificador de la clave (kid), pero para HMAC suele ignorarse.
-- **Auth Value**: La **clave secreta** (Secret Key) que se usará para firmar el token. Esta se guarda encriptada.
-- **Settings**: Un objeto JSON con la configuración de generación.
+### 1. Key Type
+Select the type of key you want to use:
+- **HMAC Secret (Shared)**: Uses a symmetric key (like `HS256`).
+- **PEM Key (RSA/EC)**: Uses an asymmetric private key (like `RS256`).
 
-### Estructura del JSON `settings`
+### 2. Algorithm
+Based on the selected Key Type, the available algorithms will populate automatically:
+- For HMAC: `HS256`, `HS384`, `HS512`.
+- For PEM: `RS256`, `RS384`, `RS512`, `ES256`, etc.
 
-```json
-{
-    "mode": "generation",
-    "alg": "HS256",
-    "claims": {
-        "iss": "mi-app-id",
-        "custom_claim": "valor"
-    }
-}
-```
+### 3. Keys / Secrets
+Depending on the Key Type, different fields will appear:
+- **Shared Secret**: For HMAC. Enter your secret string here.
+- **Private Key**: For PEM. Paste your full PEM content (starting with `-----BEGIN PRIVATE KEY-----`).
+- **Public Key**: (Optional/Informational) For PEM. Can be stored for reference.
 
-- `mode`: Debe ser `"generation"` para activar este modo. Si se omite o es otro valor, se usará `auth_value` como un token Bearer estático.
-- `alg`: El algoritmo de firma. Por defecto `HS256`. Soportados: `HS256`, `HS384`, `HS512`.
-- `claims`: (Opcional) Reclamaciones personalizadas que se añadirán al payload.
-    - `iss`: Issuer (Emisor). Por defecto es la URL de la aplicación.
-    - `iat`: Issued At (Emitido en). Se genera automáticamente (ahora).
-    - `exp`: Expiration (Expiración). Se genera automáticamente (ahora + 60 segundos).
+> [!NOTE]
+> All sensitive keys (Secrets and Private Keys) are stored securely in the database (`auth_value`), encrypted at rest.
 
-### Ejemplo de SQL
-
-```sql
-INSERT INTO credentials (name, type, auth_value, settings, created_at, updated_at)
-VALUES ('Upstream Service A', 'jwt', 'super-secret-key-123', '{"mode": "generation", "alg": "HS256"}', NOW(), NOW());
-```
+## Automatic Claims
+Laracloak automatically generates the following standard claims for every request:
+- `iss`: Issuer (Application URL).
+- `iat`: Issued At (Current timestamp).
+- `exp`: Expiration (Current timestamp + 60 seconds).
