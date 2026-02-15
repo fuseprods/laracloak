@@ -13,7 +13,7 @@ hero:
       text: View on GitHub
       link: https://github.com/fuseprods/laracloak
   image:
-    src: /img/logo.png
+    src: assets/logo.png
     alt: Laracloak Logo
 
 features:
@@ -30,12 +30,12 @@ features:
 ### 📊 Real-time Dashboards
 Visualize data from your upstream services (n8n, Make) with automatic refresh rates and zero database storage.
 
-![Laracloak Dashboard Screenshot](/img/dashboards.png)
+![Laracloak Dashboard Screenshot](assets/dashboards.png)
 
 ### 📝 Interactive Forms
 Create secure input forms that sanitize and forward usage data to your automation webhooks.
 
-![Laracloak Form Editor Screenshot](/img/forms.png)
+![Laracloak Form Editor Screenshot](assets/forms.png)
 
 ---
 

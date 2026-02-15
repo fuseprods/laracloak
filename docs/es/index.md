@@ -13,7 +13,7 @@ hero:
       text: Ver en GitHub
       link: https://github.com/fuseprods/laracloak
   image:
-    src: /img/logo.png
+    src: ../assets/logo.png
     alt: Laracloak Logo
 
 features:
@@ -30,12 +30,12 @@ features:
 ### 📊 Dashboards en Tiempo Real
 Visualiza datos desde tus servicios upstream (n8n, Make) con tasas de refresco automáticas y sin almacenamiento en base de datos.
 
-![Captura de pantalla Dashboard Laracloak](/img/dashboards.png)
+![Captura de pantalla Dashboard Laracloak](../assets/dashboards.png)
 
 ### 📝 Formularios Interactivos
 Crea formularios de entrada seguros que sanean y reenvían datos a tus webhooks de automatización.
 
-![Captura de pantalla Editor de Formularios Laracloak](/img/forms.png)
+![Captura de pantalla Editor de Formularios Laracloak](../assets/forms.png)
 
 ---
 

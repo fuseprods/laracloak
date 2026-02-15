@@ -34,7 +34,7 @@ Si un usuario tiene permiso sobre una **Categoría**, heredará automáticamente
 ### 3. Pertenencia a Grupo
 Los usuarios pueden pertenecer a múltiples grupos. Los permisos asignados a un grupo (sobre páginas o categorías) se suman a los permisos individuales del usuario.
 
-![Placeholder: Captura de pantalla de la matriz de permisos en el perfil de usuario](/img/permission_matrix.png)
+![Placeholder: Captura de pantalla de la matriz de permisos en el perfil de usuario](../assets/permission_matrix.png)
 
 ---
 

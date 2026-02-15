@@ -16,7 +16,7 @@ Designed for **data input** (Upstream -> User).
 *   **Key properties**: Automatic refresh rate (Auto-refresh).
 *   **Usual method**: `GET`.
 
-![Placeholder: Page creation form screenshot](/img/page_creation_form.png)
+![Placeholder: Page creation form screenshot](./assets/page_creation_form.png)
 
 ## 🛠️ Shared Concepts
 

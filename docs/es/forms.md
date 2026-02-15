@@ -95,6 +95,6 @@ Al pulsar "Reservar mi plaza", Laracloak:
 3.  Hace un POST al **Destination URL**.
 4.  Si el upstream responde 200 OK, muestra el **Success Message** y redirige si hay una **Redirect URL**.
 
-![Placeholder: Captura de pantalla del constructor de formularios visual](/img/form_builder.png)
+![Placeholder: Captura de pantalla del constructor de formularios visual](../assets/form_builder.png)
 
-![Placeholder: Captura de pantalla del formulario final renderizado en el front-end](/img/form_frontend.png)
+![Placeholder: Captura de pantalla del formulario final renderizado en el front-end](../assets/form_frontend.png)

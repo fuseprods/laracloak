@@ -76,7 +76,7 @@ Tras ejecutar el comando `--seed`, se crea un usuario administrador por defecto.
 > [!IMPORTANT]
 > Cambia estos valores en tu `.env` antes de ejecutar `php artisan migrate --seed` para una instalación inicial más segura.
 
-![Placeholder: Captura de pantalla de la pantalla de Login](/img/login_screen.png)
+![Placeholder: Captura de pantalla de la pantalla de Login](../assets/login_screen.png)
 
 ## 🌐 Instalación en Hosting Compartido
 

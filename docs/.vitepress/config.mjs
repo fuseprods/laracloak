@@ -2,7 +2,7 @@ export default {
     title: "Laracloak",
     description: "Secure Proxy & Dynamic Interface Platform",
     base: '/laracloak/',
-    head: [['link', { rel: 'icon', href: '/img/logo.png' }]],
+    head: [['link', { rel: 'icon', href: '/laracloak/assets/logo.png' }]],
     appearance: 'dark',
 
     locales: {
@@ -102,7 +102,7 @@ export default {
     },
 
     themeConfig: {
-        logo: '/img/logo.png',
+        logo: '/assets/logo.png',
         socialLinks: [
             { icon: 'github', link: 'https://github.com/fuseprods/laracloak' }
         ]
