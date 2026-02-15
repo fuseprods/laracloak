@@ -41,9 +41,11 @@ class CredentialsController extends Controller
             // if jwt: auth_key (null), auth_value (token)
             'auth_value' => ['required', 'string'],
             'allowed_domains' => ['nullable', 'string'], // Input as textarea
+            'settings' => ['nullable', 'json'],
         ]);
 
         $domains = array_filter(array_map('trim', explode("\n", $validated['allowed_domains'] ?? '')));
+        $settings = !empty($validated['settings']) ? json_decode($validated['settings'], true) : null;
 
         $credential = Credential::create([
             'name' => $validated['name'],
@@ -51,6 +53,7 @@ class CredentialsController extends Controller
             'auth_key' => $validated['auth_key'],
             'auth_value' => $validated['auth_value'],
             'allowed_domains' => array_values($domains),
+            'settings' => $settings,
         ]);
 
         $this->logAction('credential_created', 'Credential', $credential->id, null, ['name' => $credential->name]);
@@ -77,9 +80,11 @@ class CredentialsController extends Controller
             'auth_key' => ['nullable', 'string'],
             'auth_value' => ['nullable', 'string'],
             'allowed_domains' => ['nullable', 'string'],
+            'settings' => ['nullable', 'json'],
         ]);
 
         $domains = array_filter(array_map('trim', explode("\n", $validated['allowed_domains'] ?? '')));
+        $settings = !empty($validated['settings']) ? json_decode($validated['settings'], true) : null;
 
         $oldValues = ['name' => $credential->name];
 
@@ -88,6 +93,7 @@ class CredentialsController extends Controller
             'type' => $validated['type'],
             'auth_key' => $validated['auth_key'],
             'allowed_domains' => array_values($domains),
+            'settings' => $settings,
         ];
 
         if (!empty($validated['auth_value'])) {

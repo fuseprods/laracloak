@@ -63,7 +63,24 @@ class UpstreamService
                         $request->withHeaders([$credential->auth_key => $credential->auth_value]);
                         break;
                     case 'jwt':
-                        $request->withToken($credential->auth_value);
+                        if (isset($credential->settings['mode']) && $credential->settings['mode'] === 'generation') {
+                            $key = $credential->auth_value;
+                            $alg = $credential->settings['alg'] ?? 'HS256';
+                            $payload = [
+                                'iss' => config('app.url'),
+                                'iat' => time(),
+                                'exp' => time() + 60,
+                            ];
+
+                            if (isset($credential->settings['claims']) && is_array($credential->settings['claims'])) {
+                                $payload = array_merge($payload, $credential->settings['claims']);
+                            }
+
+                            $jwt = \Firebase\JWT\JWT::encode($payload, $key, $alg);
+                            $request->withToken($jwt);
+                        } else {
+                            $request->withToken($credential->auth_value);
+                        }
                         break;
                 }
             } elseif (!empty($this->apiKey)) {

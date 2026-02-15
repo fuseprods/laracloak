@@ -285,5 +285,13 @@
     "Option 1, Option 2, Option 3": "Option 1, Option 2, Option 3",
     "Columns (key:label, ...)": "Columns (key:label, ...)",
     "id:ID, name:Name, status:Status": "id:ID, name:Name, status:Status",
-    "Height (px)": "Height (px)"
+    "Height (px)": "Height (px)",
+    "Key Type": "Key Type",
+    "HMAC Secret (Shared)": "HMAC Secret (Shared)",
+    "PEM Key (RSA/EC)": "PEM Key (RSA/EC)",
+    "Private Key": "Private Key",
+    "Public Key": "Public Key",
+    "Algorithm": "Algorithm",
+    "Shared Secret": "Shared Secret",
+    "Leave empty to keep existing key": "Leave empty to keep existing key"
 }

@@ -306,5 +306,13 @@
     "Option 1, Option 2, Option 3": "Opción 1, Opción 2, Opción 3",
     "Columns (key:label, ...)": "Columnas (key:label, ...)",
     "id:ID, name:Name, status:Status": "id:ID, nombre:Nombre, estado:Estado",
-    "Height (px)": "Altura (px)"
+    "Height (px)": "Altura (px)",
+    "Key Type": "Tipo de Clave",
+    "HMAC Secret (Shared)": "Secreto HMAC (Compartido)",
+    "PEM Key (RSA/EC)": "Clave PEM (RSA/EC)",
+    "Private Key": "Clave Privada",
+    "Public Key": "Clave Pública",
+    "Algorithm": "Algoritmo",
+    "Shared Secret": "Secreto Compartido",
+    "Leave empty to keep existing key": "Dejar vacío para mantener la clave existente"
 }

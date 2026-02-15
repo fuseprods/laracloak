@@ -16,6 +16,7 @@ class Credential extends Model
         'auth_key',
         'auth_value',
         'allowed_domains',
+        'settings',
     ];
 
     protected function casts(): array
@@ -24,6 +25,7 @@ class Credential extends Model
             'auth_key' => 'encrypted',
             'auth_value' => 'encrypted',
             'allowed_domains' => 'array',
+            'settings' => 'array',
         ];
     }
 

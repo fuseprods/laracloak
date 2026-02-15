@@ -88,3 +88,4 @@ class AssetController extends Controller
             ->header('Cache-Control', 'private, max-age=600');
     }
 }
+//TO-DO: Revisar si los assets son accesibles sin autenticación y si es necesario agregar middleware auth a las rutas correspondientes.

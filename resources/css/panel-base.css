@@ -1032,3 +1032,66 @@ select:focus {
 #pause-btn.status-paused:hover #play-icon {
     display: block !important;
 }
+
+/* 
+   --------------------------------------------------------------------------
+   JWT / Auth Configuration Styles
+   --------------------------------------------------------------------------
+*/
+
+.auth-container {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+}
+
+.auth-title {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.jwt-config-container {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.code-input {
+    width: 100%;
+    padding: 0.75rem;
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    font-family: monospace;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.code-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2);
+}
+
+.helper-text {
+    color: var(--text-muted);
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.alert-info-light {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
