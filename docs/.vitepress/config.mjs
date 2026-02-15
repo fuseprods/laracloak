@@ -102,7 +102,7 @@ export default {
     },
 
     themeConfig: {
-        logo: '/assets/logo.png',
+        logo: '../assets/logo.png',
         socialLinks: [
             { icon: 'github', link: 'https://github.com/fuseprods/laracloak' }
         ]
