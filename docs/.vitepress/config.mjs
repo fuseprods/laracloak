@@ -1,6 +1,7 @@
 export default {
     title: "Laracloak",
     description: "Secure Proxy & Dynamic Interface Platform",
+    base: '/laracloak/',
     head: [['link', { rel: 'icon', href: '/img/logo.png' }]],
     appearance: 'dark',
 

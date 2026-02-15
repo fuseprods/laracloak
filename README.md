@@ -103,9 +103,7 @@ cmd /c <your_command> & ::
 
 ## 📝 To-Do
 
-- **Improve the panel/form editor**: The text editing area is uncomfortable and has to be manually resized. An editor with markup support—or even a drag & drop approach with different widgets—would be valuable.
-- **JWT**: Currently not properly implemented; it needs to be revisited.
-- **Grid**: Simplify the layout of elements in forms/panels using rows and columns in a more elegant way than the auxiliary widgets.
+- **Looking for ideas**: Please, open an issue and share your ideas.  
 
 ---
 
