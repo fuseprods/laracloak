@@ -13,7 +13,7 @@ hero:
       text: Ver en GitHub
       link: https://github.com/fuseprods/laracloak
   image:
-    src: ../assets/logo.png
+    src: /logo.png
     alt: Laracloak Logo
 
 features:
