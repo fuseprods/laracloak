@@ -10,8 +10,8 @@
 
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License"></a>
-  <a href="#"><img src="https://img.shields.io/badge/PHP-8.1+-blue.svg" alt="PHP 8.1+"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Laravel-11-red.svg" alt="Laravel 11"></a>
+  <a href="#"><img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP 8.1+"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Laravel-12-red.svg" alt="Laravel 11"></a>
 </p>
 
 ---
